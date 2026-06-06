@@ -104,6 +104,20 @@ window.addEventListener('DOMContentLoaded', () => {
   const btnMuteVideo = document.getElementById('btnMuteVideo');
 
   if (teaserVideo && btnPlayPauseVideo && btnMuteVideo) {
+    // Force browser parameters to comply with autoplay policy
+    teaserVideo.muted = true;
+    teaserVideo.defaultMuted = true;
+
+    const attemptAutoplay = () => {
+      teaserVideo.play().catch(err => {
+        console.log("Muted autoplay blocked or deferred:", err);
+      });
+    };
+
+    // Attempt immediately and when canplay triggers
+    attemptAutoplay();
+    teaserVideo.addEventListener('canplay', attemptAutoplay, { once: true });
+
     btnPlayPauseVideo.addEventListener('click', (e) => {
       e.stopPropagation();
       if (teaserVideo.paused) {
