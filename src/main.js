@@ -104,14 +104,24 @@ window.addEventListener('DOMContentLoaded', () => {
   const btnMuteVideo = document.getElementById('btnMuteVideo');
 
   if (teaserVideo && btnPlayPauseVideo && btnMuteVideo) {
-    // Force browser parameters to comply with autoplay policy
-    teaserVideo.muted = true;
-    teaserVideo.defaultMuted = true;
+    // Attempt unmuted autoplay by default
+    teaserVideo.muted = false;
+    teaserVideo.defaultMuted = false;
 
     const attemptAutoplay = () => {
-      teaserVideo.play().catch(err => {
-        console.log("Muted autoplay blocked or deferred:", err);
-      });
+      teaserVideo.play()
+        .then(() => {
+          // Success playing unmuted! Show volume icon as active
+          btnMuteVideo.innerHTML = '<span class="video-icon">🔊</span>';
+        })
+        .catch(err => {
+          console.log("Unmuted autoplay blocked by browser policy, falling back to muted:", err);
+          teaserVideo.muted = true;
+          btnMuteVideo.innerHTML = '<span class="video-icon">🔇</span>';
+          teaserVideo.play().catch(err2 => {
+            console.log("Muted autoplay also failed:", err2);
+          });
+        });
     };
 
     // Attempt immediately and when canplay triggers
