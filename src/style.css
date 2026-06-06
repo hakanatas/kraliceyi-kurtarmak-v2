@@ -1574,12 +1574,24 @@ header {
   .chest-card {
     width: 100%;
   }
+
+  /* Prevent top and bottom cut-offs in puzzle modals on mobile screens */
+  .puzzle-modal--active {
+    align-items: flex-start;
+    overflow-y: auto;
+  }
+  .puzzle-panel {
+    max-height: none;
+    overflow-y: visible;
+    margin: var(--space-md) auto;
+  }
 }
 
 /* Extra mobile screen configurations (Portrait modal optimizations) */
 @media (max-width: 600px) {
   .puzzle-panel {
     padding: var(--space-md) var(--space-sm);
+    margin: var(--space-xs) auto;
   }
   .close-btn {
     top: var(--space-sm);
@@ -1781,6 +1793,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .padlock-svg {

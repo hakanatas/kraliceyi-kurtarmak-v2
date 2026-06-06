@@ -367,6 +367,8 @@ function setupMapTooltips() {
     if (!node) continue;
 
     node.addEventListener('mouseenter', () => {
+      if (window.matchMedia('(pointer: coarse)').matches) return;
+
       const info = towerDescriptions[i];
       let statusText = "Kilitli Bölge";
       let statusClass = "locked";
