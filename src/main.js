@@ -66,6 +66,32 @@ const padlockWrapper = document.getElementById('padlockWrapper');
 const magicKey = document.getElementById('magicKey');
 const mapTooltip = document.getElementById('mapTooltip');
 
+// New V2 DOM Elements
+const btnToggleTeaser = document.getElementById('btnToggleTeaser');
+const btnBackToIllustration = document.getElementById('btnBackToIllustration');
+const heroIllustrationWrapper = document.getElementById('heroIllustrationWrapper');
+const heroVideoWrapper = document.getElementById('heroVideoWrapper');
+
+const tabBtnInteractive = document.getElementById('tabBtnInteractive');
+const tabBtnWorksheet = document.getElementById('tabBtnWorksheet');
+const tabContentInteractive = document.getElementById('tabContentInteractive');
+const tabContentWorksheet = document.getElementById('tabContentWorksheet');
+
+const wsTopic = document.getElementById('wsTopic');
+const wsOutcome = document.getElementById('wsOutcome');
+const wsQ1Text = document.getElementById('wsQ1Text');
+const wsQ2Text = document.getElementById('wsQ2Text');
+const btnPrintWorksheet = document.getElementById('btnPrintWorksheet');
+
+// Hidden printable element placeholders
+const printableWorksheet = document.getElementById('printableWorksheet');
+const wsPrintTitle = document.getElementById('wsPrintTitle');
+const wsPrintTopic = document.getElementById('wsPrintTopic');
+const wsPrintOutcome = document.getElementById('wsPrintOutcome');
+const wsPrintNarrative = document.getElementById('wsPrintNarrative');
+const wsPrintQ1Text = document.getElementById('wsPrintQ1Text');
+const wsPrintQ2Text = document.getElementById('wsPrintQ2Text');
+
 // 1. Initial Setup
 window.addEventListener('DOMContentLoaded', () => {
   // Start canvas background
@@ -104,30 +130,6 @@ window.addEventListener('DOMContentLoaded', () => {
   const btnMuteVideo = document.getElementById('btnMuteVideo');
 
   if (teaserVideo && btnPlayPauseVideo && btnMuteVideo) {
-    // Attempt unmuted autoplay by default
-    teaserVideo.muted = false;
-    teaserVideo.defaultMuted = false;
-
-    const attemptAutoplay = () => {
-      teaserVideo.play()
-        .then(() => {
-          // Success playing unmuted! Show volume icon as active
-          btnMuteVideo.innerHTML = '<span class="video-icon">🔊</span>';
-        })
-        .catch(err => {
-          console.log("Unmuted autoplay blocked by browser policy, falling back to muted:", err);
-          teaserVideo.muted = true;
-          btnMuteVideo.innerHTML = '<span class="video-icon">🔇</span>';
-          teaserVideo.play().catch(err2 => {
-            console.log("Muted autoplay also failed:", err2);
-          });
-        });
-    };
-
-    // Attempt immediately and when canplay triggers
-    attemptAutoplay();
-    teaserVideo.addEventListener('canplay', attemptAutoplay, { once: true });
-
     btnPlayPauseVideo.addEventListener('click', (e) => {
       e.stopPropagation();
       if (teaserVideo.paused) {
@@ -157,6 +159,86 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     teaserVideo.addEventListener('ended', () => {
       btnPlayPauseVideo.innerHTML = '<span class="video-icon">▶️</span>';
+    });
+  }
+
+  // V2 Tab Bindings in modal
+  if (tabBtnInteractive && tabBtnWorksheet) {
+    tabBtnInteractive.addEventListener('click', () => {
+      playSoundEffect(playClick);
+      tabBtnInteractive.classList.add('tab-btn--active');
+      tabBtnWorksheet.classList.remove('tab-btn--active');
+      tabContentInteractive.classList.add('tab-content--active');
+      tabContentWorksheet.classList.remove('tab-content--active');
+    });
+
+    tabBtnWorksheet.addEventListener('click', () => {
+      playSoundEffect(playClick);
+      tabBtnWorksheet.classList.add('tab-btn--active');
+      tabBtnInteractive.classList.remove('tab-btn--active');
+      tabContentWorksheet.classList.add('tab-content--active');
+      tabContentInteractive.classList.remove('tab-content--active');
+    });
+  }
+
+  // V2 Print Worksheet trigger
+  if (btnPrintWorksheet) {
+    btnPrintWorksheet.addEventListener('click', () => {
+      playSoundEffect(playClick);
+      let name = playerNameInput.value.trim();
+      if (name === '') {
+        name = prompt("Yazdırılacak çalışma kağıdı için adınızı girin (isteğe bağlı):") || "Öğrenci Kaşif";
+      }
+      
+      // Fill name in printable worksheet header
+      const printNameEl = document.querySelector('.ws-header-meta .meta-field:first-child');
+      if (printNameEl) {
+        printNameEl.innerHTML = `<strong>Öğrencinin Adı Soyadı:</strong> ${name}`;
+      }
+      
+      // Trigger printing
+      window.print();
+    });
+  }
+
+  // V2 Landing Video showcase toggle bindings
+  if (btnToggleTeaser && btnBackToIllustration && heroIllustrationWrapper && heroVideoWrapper) {
+    btnToggleTeaser.addEventListener('click', (e) => {
+      e.stopPropagation();
+      playSoundEffect(playClick);
+      
+      gsap.to(heroIllustrationWrapper, {
+        opacity: 0,
+        duration: 0.3,
+        onComplete: () => {
+          heroIllustrationWrapper.style.display = 'none';
+          heroVideoWrapper.style.display = 'block';
+          gsap.fromTo(heroVideoWrapper, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+          
+          if (teaserVideo) {
+            teaserVideo.play().catch(err => console.log("Video autoplay failed:", err));
+          }
+        }
+      });
+    });
+
+    btnBackToIllustration.addEventListener('click', (e) => {
+      e.stopPropagation();
+      playSoundEffect(playClick);
+      
+      if (teaserVideo) {
+        teaserVideo.pause();
+      }
+
+      gsap.to(heroVideoWrapper, {
+        opacity: 0,
+        duration: 0.3,
+        onComplete: () => {
+          heroVideoWrapper.style.display = 'none';
+          heroIllustrationWrapper.style.display = 'block';
+          gsap.fromTo(heroIllustrationWrapper, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+        }
+      });
     });
   }
 
@@ -432,6 +514,30 @@ function openPuzzleModal(gateId, isAlreadySolved = false) {
   
   currentOpenPuzzle = { puzzle: p, solved: isAlreadySolved };
   
+  // Reset tabs default view
+  if (tabBtnInteractive && tabBtnWorksheet) {
+    tabBtnInteractive.classList.add('tab-btn--active');
+    tabBtnWorksheet.classList.remove('tab-btn--active');
+    tabContentInteractive.classList.add('tab-content--active');
+    tabContentWorksheet.classList.remove('tab-content--active');
+  }
+
+  // Populate Worksheet Preview and print data
+  if (p.worksheet) {
+    if (wsTopic) wsTopic.textContent = p.worksheet.topic;
+    if (wsOutcome) wsOutcome.textContent = p.worksheet.outcome;
+    if (wsQ1Text) wsQ1Text.textContent = p.worksheet.questions[0].text;
+    if (wsQ2Text) wsQ2Text.textContent = p.worksheet.questions[1].text;
+
+    // Populate hidden printable worksheet details
+    if (wsPrintTitle) wsPrintTitle.textContent = `BÖLÜM ${p.id}: ${p.worksheet.title.toUpperCase()}`;
+    if (wsPrintTopic) wsPrintTopic.textContent = p.worksheet.topic;
+    if (wsPrintOutcome) wsPrintOutcome.textContent = p.worksheet.outcome;
+    if (wsPrintNarrative) wsPrintNarrative.textContent = p.narrative;
+    if (wsPrintQ1Text) wsPrintQ1Text.textContent = p.worksheet.questions[0].text;
+    if (wsPrintQ2Text) wsPrintQ2Text.textContent = p.worksheet.questions[1].text;
+  }
+
   // Clean submit button mode attributes
   btnSubmitAnswer.removeAttribute('data-mode');
 

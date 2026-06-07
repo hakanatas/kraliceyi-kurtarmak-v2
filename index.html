@@ -67,43 +67,52 @@
       <section class="screen screen--active" id="heroScreen">
         <div class="hero-grid">
           <div class="hero-left">
-            <!-- Floating 3D Book Cover -->
-            <div class="book-container" id="landingBook">
-              <div class="book">
-                <div class="book-cover">
-                  <div class="book-subtitle">Matematik Macerası</div>
-                  <div class="book-title">Kraliçeyi<br/>Kurtarmak</div>
-                  <div class="book-ornament">💎</div>
-                  <div class="book-author">Vladimir Tumanov</div>
-                </div>
+            <!-- Mascot Welcome Bubble -->
+            <div class="mascot-welcome glass-panel">
+              <img src="/monoculus.png" alt="Sevimli Canavar Monoculus" class="welcome-mascot-img" />
+              <div class="mascot-bubble">
+                <span class="mascot-name">Monoculus Diyor ki:</span>
+                <p>"Selam Genç Matematik Kaşifi! Ben Monoculus. Kraliçe Jayden'ı kurtarmak için sihirli matematik maceramıza katılmaya hazır mısın? Sana yol boyunca rehberlik edeceğim!"</p>
               </div>
             </div>
 
             <h1 class="hero-title">Matematiğin Sihirli Dünyasına Hoş Geldin!</h1>
             <p class="hero-subtitle">
-              Aleks ve arkadaşlarının gizemli dünyasına ortak ol. Kral Recher'in zindanlarında hapsedilen Kraliçe Jayden'ı kurtarmak için matematik bilmecelerini çöz, kapıları tek tek aç!
+              Aleks, Sam ve Vanessa'nın gizemli dünyasına ortak ol. Kral Recher'in zindanlarında hapsedilen Kraliçe Jayden'ı kurtarmak için matematik bilmecelerini çöz, kapıları tek tek aç!
             </p>
             <button class="btn btn--primary btn--glow" id="btnStartAdventure">Maceraya Başla ⚔️</button>
           </div>
 
           <div class="hero-right">
-            <div class="video-showcase">
-              <div class="video-wrapper">
-                <video id="teaserVideo" playsinline autoplay preload="auto">
+            <div class="video-showcase glass-panel">
+              <!-- Default: Showcase the gorgeous castle illustration -->
+              <div class="illustration-wrapper" id="heroIllustrationWrapper">
+                <img src="/landing_illustration.png" alt="Lugubriya Krallığı Şatosu" class="hero-illustration" />
+                <button class="btn btn--secondary btn--small play-teaser-btn" id="btnToggleTeaser">
+                  🎬 Tanıtım Videosunu İzle
+                </button>
+              </div>
+              
+              <!-- Hidden Video Wrapper, shown when clicking the play-teaser button -->
+              <div class="video-wrapper" id="heroVideoWrapper" style="display: none;">
+                <video id="teaserVideo" playsinline preload="auto">
                   <source src="/intro.mp4" type="video/mp4" />
                   Tarayıcınız video etiketini desteklemiyor.
                 </video>
                 <div class="video-controls-overlay">
                   <button class="video-control-btn" id="btnPlayPauseVideo" aria-label="Oynat / Duraklat" title="Oynat / Duraklat">
-                    <span class="video-icon">⏸️</span>
+                    <span class="video-icon">▶️</span>
                   </button>
                   <button class="video-control-btn" id="btnMuteVideo" aria-label="Sesi Aç / Kapat" title="Sesi Aç / Kapat">
                     <span class="video-icon">🔇</span>
                   </button>
+                  <button class="video-control-btn" id="btnBackToIllustration" aria-label="Geri Dön" title="Görsele Dön">
+                    <span class="video-icon">🖼️</span>
+                  </button>
                 </div>
               </div>
-              <div class="video-caption">
-                🎬 Kitap Tanıtım Videosu - İzle ve Macerayı Hisset!
+              <div class="video-caption" id="showcaseCaption">
+                🏰 Lugubriya Krallığı ve Zümrüt Kraliçe'nin Dünyası
               </div>
             </div>
           </div>
@@ -291,44 +300,139 @@
             </svg>
           </div>
         </div>
+
+        <!-- Modal Tabs Navigation -->
+        <div class="modal-tabs">
+          <button class="tab-btn tab-btn--active" id="tabBtnInteractive">İnteraktif Görevler 🎮</button>
+          <button class="tab-btn" id="tabBtnWorksheet">Çalışma Kağıdı 📝</button>
+        </div>
         
-        <!-- Story Chat bubble -->
-        <div class="dialogue-box">
-          <div class="char-avatar" id="speechAvatar">👑</div>
-          <div class="char-content">
-            <div class="char-name" id="speechName">Kral Recher</div>
-            <div class="char-speech" id="speechText">Diyalog metni buraya gelecek...</div>
+        <!-- Tab 1: Interactive Challenge View -->
+        <div class="tab-content tab-content--active" id="tabContentInteractive">
+          <!-- Story Chat bubble -->
+          <div class="dialogue-box">
+            <div class="char-avatar" id="speechAvatar">👑</div>
+            <div class="char-content">
+              <div class="char-name" id="speechName">Kral Recher</div>
+              <div class="char-speech" id="speechText">Diyalog metni buraya gelecek...</div>
+            </div>
+          </div>
+
+          <!-- Question Prompt -->
+          <div class="question-card">
+            <div class="question-title">ZİNDAN BİLMECESİ:</div>
+            <p class="question-text" id="questionText">Sorunun açıklaması buraya gelecek...</p>
+          </div>
+
+          <!-- Working Area: Render custom interactive components dynamically -->
+          <div class="vis-workarea" id="visWorkarea">
+            <!-- Dynamic Visualizer appends here -->
+          </div>
+
+          <!-- Answer inputs and control button -->
+          <div class="submission-bar">
+            <div class="input-container">
+              <label for="pInput" style="font-size: 0.9rem; font-weight: bold; color: var(--color-text-muted);">Cevabın:</label>
+              <input type="text" id="pInput" class="answer-input" placeholder="Sayı..." />
+            </div>
+            
+            <div class="flex gap-md" style="margin-top: 0.5rem;">
+              <button class="btn btn--secondary" id="btnShowHint">💡 İpucu Al</button>
+              <button class="btn btn--primary" id="btnSubmitAnswer">Kapıyı Aç 🗝️</button>
+            </div>
+          </div>
+
+          <!-- Alert messages/Hints/Solutions -->
+          <div class="info-box info-box--hint" id="hintBox">İpucu açıklaması...</div>
+          <div class="info-box info-box--solution" id="solutionBox">Çözüm açıklaması...</div>
+        </div>
+
+        <!-- Tab 2: Worksheet Print View -->
+        <div class="tab-content" id="tabContentWorksheet">
+          <div class="worksheet-preview-card">
+            <div class="preview-header">
+              <img src="/monoculus.png" alt="Mascot Monoculus" class="preview-mascot" />
+              <div class="preview-bubble">
+                <span class="bubble-title">Monoculus Diyor ki:</span>
+                <p>"Matematiği kağıt üzerinde modellemek zihnini açar! Bu zindan kapısına ait ders çalışma kağıdını indirip yazdırabilirsin!"</p>
+              </div>
+            </div>
+            
+            <div class="preview-info-rows">
+              <div class="p-row"><strong>Konu Başlığı:</strong> <span id="wsTopic">Yükleniyor...</span></div>
+              <div class="p-row"><strong>Kazanım Hedefi:</strong> <span id="wsOutcome">Yükleniyor...</span></div>
+            </div>
+
+            <div class="preview-questions-list">
+              <div class="preview-q-item">
+                <span class="pq-num">Soru 1:</span>
+                <span class="pq-text" id="wsQ1Text">Yükleniyor...</span>
+              </div>
+              <div class="preview-q-item">
+                <span class="pq-num">Soru 2:</span>
+                <span class="pq-text" id="wsQ2Text">Yükleniyor...</span>
+              </div>
+            </div>
+
+            <div class="worksheet-actions">
+              <button class="btn btn--primary btn--glow" id="btnPrintWorksheet">🖨️ Çalışma Kağıdını Yazdır / PDF Kaydet</button>
+            </div>
           </div>
         </div>
-
-        <!-- Question Prompt -->
-        <div class="question-card">
-          <div class="question-title">ZİNDAN BİLMECESİ:</div>
-          <p class="question-text" id="questionText">Sorunun açıklaması buraya gelecek...</p>
-        </div>
-
-        <!-- Working Area: Render custom interactive components dynamically -->
-        <div class="vis-workarea" id="visWorkarea">
-          <!-- Dynamic Visualizer appends here -->
-        </div>
-
-        <!-- Answer inputs and control button -->
-        <div class="submission-bar">
-          <div class="input-container">
-            <label for="pInput" style="font-size: 0.9rem; font-weight: bold; color: var(--color-text-muted);">Cevabın:</label>
-            <input type="text" id="pInput" class="answer-input" placeholder="Sayı..." />
-          </div>
-          
-          <div class="flex gap-md" style="margin-top: 0.5rem;">
-            <button class="btn btn--secondary" id="btnShowHint">💡 İpucu Al</button>
-            <button class="btn btn--primary" id="btnSubmitAnswer">Kapıyı Aç 🗝️</button>
-          </div>
-        </div>
-
-        <!-- Alert messages/Hints/Solutions -->
-        <div class="info-box info-box--hint" id="hintBox">İpucu açıklaması...</div>
-        <div class="info-box info-box--solution" id="solutionBox">Çözüm açıklaması...</div>
       </div>
+    </div>
+  </div>
+
+  <!-- Hidden Printable Worksheet Container (Visible only on print) -->
+  <div class="printable-worksheet" id="printableWorksheet">
+    <div class="ws-print-header">
+      <div class="ws-header-title">👑 KRALİÇEYİ KURTARMAK MATEMATİK ÇALIŞMA KAĞIDI</div>
+      <div class="ws-header-meta">
+        <div class="meta-field"><strong>Öğrencinin Adı Soyadı:</strong> ________________________</div>
+        <div class="meta-field"><strong>Sınıfı / No:</strong> ______________</div>
+        <div class="meta-field"><strong>Tarih:</strong> _________________</div>
+      </div>
+    </div>
+
+    <div class="ws-print-body">
+      <div class="ws-section-box">
+        <h3 id="wsPrintTitle">Bölüm X: ...</h3>
+        <p><strong>Konu Başlığı:</strong> <span id="wsPrintTopic">...</span></p>
+        <p><strong>Öğrenme Kazanımı:</strong> <span id="wsPrintOutcome">...</span></p>
+      </div>
+
+      <div class="ws-intro-story">
+        <strong>Lugubriya Krallığı Hikayesi:</strong>
+        <p id="wsPrintNarrative">...</p>
+      </div>
+
+      <div class="ws-questions-container">
+        <!-- Question 1 -->
+        <div class="ws-q-block">
+          <div class="ws-q-header">SORU 1:</div>
+          <div class="ws-q-text" id="wsPrintQ1Text">...</div>
+          
+          <div class="ws-working-space">
+            <div class="ws-space-title">✍️ Çözüm ve Çizim / Modelleme Alanı:</div>
+            <div class="ws-empty-box" id="wsPrintQ1Space"></div>
+          </div>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="ws-q-block">
+          <div class="ws-q-header">SORU 2:</div>
+          <div class="ws-q-text" id="wsPrintQ2Text">...</div>
+          
+          <div class="ws-working-space">
+            <div class="ws-space-title">✍️ Çözüm ve Çizim / Modelleme Alanı:</div>
+            <div class="ws-empty-box" id="wsPrintQ2Space"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ws-print-footer">
+      <div class="footer-note">Zihnini kullan, zindan kapılarını aç ve Kraliçe Jayden'ı kurtar! | 5. Sınıf Matematik Macerası</div>
     </div>
   </div>
 

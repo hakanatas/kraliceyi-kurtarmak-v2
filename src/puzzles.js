@@ -11,6 +11,23 @@ export const puzzles = [
     character: "Kral Recher",
     avatar: "👑",
     narrative: "Aleks ve arkadaşları zindanın ilk ağır demir kapısına ulaşırlar. Kapının üzerinde Recher'in alaycı sesi yankılanır: 'Sihirli kaleminize çok güvendiniz, ama o artık yok! Kraliçeyi kurtarmak istiyorsanız, zihninizi kullanmalısınız. Zindanın ilk kilidini açmak için iki sihirli sayı makinesinin de gizemini çözmelisin!'",
+    worksheet: {
+      title: "Sihirli Kalem (Ters İşlem)",
+      topic: "Doğal Sayılarla İşlemler (Ters İşlem)",
+      outcome: "Geriye doğru çalışma stratejisini kullanarak verilmeyen başlangıç değerini bulur.",
+      questions: [
+        {
+          id: 1,
+          text: "Sihirli bir sayı makinesi, içine atılan bir sayıyı 4 ile çarpıp sonucuna 12 eklediğinde 60 elde ediyor. Bu makineye başlangıçta atılan sayı kaçtır?",
+          spaceType: "reverse-pipeline-1"
+        },
+        {
+          id: 2,
+          text: "Bir sayının yarısından 7 çıkarıldığında 8 elde ediliyor. Bu sayının başlangıçtaki değeri kaçtır?",
+          spaceType: "reverse-pipeline-2"
+        }
+      ]
+    },
     tasks: [
       {
         question: "1. Görev: Sihirli sayı makinesi bir sayıyı 3 ile çarpıp, sonucuna 5 eklediğinde 26 elde ediyor. Başlangıçtaki sayı kaçtır?",
@@ -153,6 +170,23 @@ export const puzzles = [
     character: "Vanessa",
     avatar: "👧",
     narrative: "Karşılarına altından lavların aktığı tehlikeli bir nehir çıkar. Vanessa köprünün üzerindeki taş sayı örüntülerini gösterir: 'Köprü taşlarının üzerindeki sayıların gizli kuralını bulmalıyız. İki köprü bölgesindeki örüntüyü de çözersek karşıya güvenle geçebiliriz!'",
+    worksheet: {
+      title: "Lugubriya Köprüsü (Sayı Örüntüleri)",
+      topic: "Sayı Örüntüleri ve İlişkiler",
+      outcome: "Belirli bir kurala göre artan veya azalan sayı örüntülerindeki ilişkileri keşfeder ve örüntüyü genişletir.",
+      questions: [
+        {
+          id: 1,
+          text: "5, 11, 23, 47, [?] sayı örüntüsündeki artış kuralını açıklayarak soru işareti yerine gelmesi gereken sayıyı bulunuz.",
+          spaceType: "pattern-boxes-1"
+        },
+        {
+          id: 2,
+          text: "1, 4, 16, 64, [?] sayı örüntüsündeki kuralı belirleyip soru işareti yerine gelmesi gereken sayıyı bulunuz.",
+          spaceType: "pattern-boxes-2"
+        }
+      ]
+    },
     tasks: [
       {
         question: "1. Görev: 3, 7, 15, 31, 63, [?] sayı örüntüsünde boş bırakılan yere hangi sayı gelmelidir?",
@@ -276,6 +310,23 @@ export const puzzles = [
     character: "Sam",
     avatar: "👦",
     narrative: "Zümrüt Kulesi'nin kapısında yeşil alevlerle yazılmış bilmeceler belirir. Sam cebinden not defterini çıkarır: 'Vanessa ile paylaştığımız sihirli zümrütlerin kesir problemlerini çözersek kapı açılacak. Dikkatli şekil çizmeliyiz!'",
+    worksheet: {
+      title: "Zümrüt Kulesi (Kesir Problemleri)",
+      topic: "Kesirlerle İşlemler ve Şekil Çizme",
+      outcome: "Bir bütünün kesir kadarını hesaplar ve kalan parçalardan bütüne ulaşmak için şekil çizme stratejisini uygular.",
+      questions: [
+        {
+          id: 1,
+          text: "30 sayısının 2/5'i ile 1/3'ünün toplamı kaçtır? (Bütünü modelleme kutularına ayırıp boyayarak çözünüz.)",
+          spaceType: "fraction-grid-1"
+        },
+        {
+          id: 2,
+          text: "Hakan cebindeki paranın 1/4'ünü harcıyor. Kalan parasının 1/3'ü ile kitap alıyor. Geriye 30 TL'si kaldığına göre başlangıçta kaç TL'si vardı? (Şekil çizerek kutu modeli oluşturunuz.)",
+          spaceType: "fraction-grid-2"
+        }
+      ]
+    },
     tasks: [
       {
         question: "1. Görev: Bir torbadaki sihirli zümrütlerin 1/3'ünü Vanessa alıyor. Kalan zümrütlerin 1/4'ünü Sam alıyor. Geriye 6 adet zümrüt kaldığına göre, başlangıçta kaç zümrüt vardı?",
@@ -442,6 +493,23 @@ export const puzzles = [
     character: "Aleks",
     avatar: "👦",
     narrative: "Kraliçe'nin kulesinin önündeki iki muhafız yolu kapatmıştır. Aleks'e bakar ve kükrerler: 'Buradan geçmek için yaşlarımızın gizemini çözmelisin! İki farklı nöbetçi çiftinin bilmecelerini doğru yanıtla!'",
+    worksheet: {
+      title: "Muhafız Geçidi (Yaş/Kat Modeli)",
+      topic: "Kat ve Yaş Problemleri (Kutu Modelleme)",
+      outcome: "Bilinmeyen değerler arasındaki kat ilişkilerini kutu veya terazi modeli kullanarak görselleştirir ve çözer.",
+      questions: [
+        {
+          id: 1,
+          text: "Elif'in ağırlığı Selin'in ağırlığının 2 katıdır. İkisinin ağırlıkları toplamı 72 kg olduğuna göre Elif kaç kilogramdır? (Kutu modeli çizerek gösteriniz.)",
+          spaceType: "scale-balance-1"
+        },
+        {
+          id: 2,
+          text: "Bir babanın yaşı oğlunun yaşının 3 katından 4 fazladır. İkisinin yaşları toplamı 44 olduğuna göre baba kaç yaşındadır? (Denklem modelini çizerek çözünüz.)",
+          spaceType: "scale-balance-2"
+        }
+      ]
+    },
     tasks: [
       {
         question: "1. Görev: Baş muhafızın yaşı, genç muhafızın yaşının tam 3 katıdır. İkisinin yaşları toplamı 48 olduğuna göre baş muhafız kaç yaşındadır?",
@@ -645,6 +713,23 @@ export const puzzles = [
     character: "Kraliçe Jayden",
     avatar: "🧝‍♀️",
     narrative: "Sonunda Kraliçe Jayden'ın hücresine ulaşırlar. Hücrenin önünde üç sandık durmaktadır. Kraliçe içeriden seslenir: 'Sevgili çocuklar, beni kurtaracak anahtarlar bu sandıklarda gizli. Sandıkların üstündeki ifadeleri mantıksal olarak analiz edip doğru anahtarları bulun!'",
+    worksheet: {
+      title: "Kraliçe'nin Zindanı (Mantık Matrisi)",
+      topic: "Mantıksal Akıl Yürütme ve Çelişki",
+      outcome: "Doğruluk/yalan durumlarına göre varsayımlarda bulunarak mantık matrisi oluşturur ve çelişkileri bulup problemi çözer.",
+      questions: [
+        {
+          id: 1,
+          text: "Mert, Can ve Ali farklı renkte (Kırmızı, Mavi, Yeşil) kazaklar giymiştir:\n- Mert: 'Kırmızı kazağı ben giydim.'\n- Can: 'Ben mavi giymedim.'\n- Ali: 'Mert kırmızı giymedi.'\nEğer sadece bir kişi doğru söylüyorsa kim hangi rengi giymiştir? (Mantık tablosu oluşturup çelişkileri yazınız.)",
+          spaceType: "logic-matrix-1"
+        },
+        {
+          id: 2,
+          text: "A, B ve C kutularında sırasıyla altın, gümüş ve bronz anahtarlar saklıdır:\n- A Kutusu: 'Gümüş anahtar buradadır.'\n- B Kutusu: 'Bronz anahtar burada değildir.'\n- C Kutusu: 'Altın anahtar A kutusundadır.'\nEğer sadece tek bir ifade YALAN ise altın anahtar gerçekte hangi kutudadır?",
+          spaceType: "logic-matrix-2"
+        }
+      ]
+    },
     tasks: [
       {
         question: "1. Görev: Kırmızı, Mavi ve Yeşil sandıklar üzerindeki ifadeler:\nKırmızı: 'Anahtar bu sandıktadır.'\nMavi: 'Anahtar bu sandıkta değildir.'\nYeşil: 'Anahtar Kırmızı sandıkta değildir.'\nRecher sadece TEK BİR ifadenin doğru (diğer ikisinin yalan) olduğunu söylüyor. Anahtar hangi sandıktadır?",
