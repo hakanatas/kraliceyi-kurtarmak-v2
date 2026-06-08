@@ -117,7 +117,7 @@ window.addEventListener('DOMContentLoaded', () => {
   btnSubmitAnswer.addEventListener('click', handleSubmitAnswer);
   
   // Map Tower Clicks & Tooltips
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 8; i++) {
     const node = document.getElementById(`node-${i}`);
     if (node) {
       node.addEventListener('click', () => handleTowerClick(i));
@@ -355,16 +355,19 @@ function playSoundEffect(audioFunction) {
 
 // Coordinate coordinates of the towers on the SVG canvas (viewBox 800x500)
 const nodeCoords = {
-  1: { x: 120, y: 380 },
-  2: { x: 250, y: 220 },
-  3: { x: 400, y: 330 },
-  4: { x: 550, y: 180 },
-  5: { x: 680, y: 250 }
+  1: { x: 100, y: 400 },
+  2: { x: 220, y: 350 },
+  3: { x: 160, y: 220 },
+  4: { x: 300, y: 150 },
+  5: { x: 450, y: 260 },
+  6: { x: 410, y: 410 },
+  7: { x: 580, y: 350 },
+  8: { x: 700, y: 200 }
 };
 
 // 4. Map Logic & Path styling
 function updateMapVisuals(animate = false) {
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 8; i++) {
     const node = document.getElementById(`node-${i}`);
     if (!node) continue;
     
@@ -381,7 +384,7 @@ function updateMapVisuals(animate = false) {
   }
 
   // Update connecting lines
-  for (let i = 1; i <= 4; i++) {
+  for (let i = 1; i <= 7; i++) {
     const path = document.getElementById(`path-${i}-${i+1}`);
     if (!path) continue;
     
@@ -441,10 +444,13 @@ function setupMapTooltips() {
     2: { title: "2. Kapı: Lav Köprüsü", desc: "Altından kızgın lavların aktığı nehir. Köprünün taş kuralını çözerek karşıya güvenle geç.", chapter: "Lav Nehri" },
     3: { title: "3. Kapı: Zümrüt Kulesi", desc: "Kulenin tepesindeki kesir alevleri yolu kapadı. Zümrütleri kesir modellerine ayırarak bilmeceyi çöz.", chapter: "Zümrüt Labirenti" },
     4: { title: "4. Kapı: Muhafız Geçidi", desc: "Recher'in iki dev nöbetçisi kapıda bekliyor. Yaş katı terazi dengesini kurarak muhafızları aş.", chapter: "Muhafız Kışlası" },
-    5: { title: "5. Kapı: Kraliçe Hücresi", desc: "Kraliçe Jayden burada kilitli! Mantık matrisini inceleyerek doğru sandığı ve anahtarı belirle.", chapter: "Büyük Salon" }
+    5: { title: "5. Kapı: Kamyon Karşılaşması", desc: "A ve B kalelerinden karşılaşan sevimli kamyonların yolunu ve karşılaşma süresini hesapla.", chapter: "Kanyon Geçidi" },
+    6: { title: "6. Kapı: Gümüş Kuleler", desc: "Bahçedeki parıldayan gümüş kulelerin yükseklik örüntüsü kuralını bulup kilidi aç.", chapter: "Kraliyet Bahçesi" },
+    7: { title: "7. Kapı: Monoculus Soyu", desc: "Karanlık mağaradaki tek gözlü ve 3 gözlü canavarların toplam göz sayılarını varsayım yaparak dengele.", chapter: "Karanlık Mağara" },
+    8: { title: "8. Kapı: Kraliçe'nin Zindanı", desc: "Kraliçe Jayden burada kilitli! Mantık sandıklarını analiz ederek doğru sandığı ve anahtarı belirle.", chapter: "Büyük Salon" }
   };
 
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 8; i++) {
     const node = document.getElementById(`node-${i}`);
     if (!node) continue;
 
@@ -667,7 +673,7 @@ function handleSubmitAnswer() {
     closeModal();
     btnSubmitAnswer.removeAttribute('data-mode');
     
-    if (activeGate > 5) {
+    if (activeGate > 8) {
       switchScreen(mapScreen, successScreen);
       playSoundEffect(playSuccess);
       triggerConfetti();
@@ -799,7 +805,7 @@ function handleSubmitAnswer() {
       btnShowHint.style.display = 'none';
       btnSubmitAnswer.setAttribute('data-mode', 'continue');
       
-      if (puzzle.id === 5) {
+      if (puzzle.id === 8) {
         btnSubmitAnswer.textContent = "Kraliçe'nin Yanına Git 👑";
       } else {
         btnSubmitAnswer.textContent = "Haritada Devam Et ➔";

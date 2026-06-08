@@ -1344,10 +1344,373 @@ header {
   color: var(--color-recher);
 }
 
-.logic-explain {
+
+/* 6. Vis: Speed Counter Encounter */
+.vis-speed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.speed-road {
+  position: relative;
+  width: 100%;
+  max-width: 550px;
+  height: 80px;
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  border: 2px solid rgba(99, 102, 241, 0.25);
+  border-radius: var(--radius-md);
+  margin: var(--space-md) 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.5), 0 4px 12px rgba(99,102,241,0.05);
+}
+
+.speed-road::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-top: 2px dashed rgba(253, 224, 71, 0.6);
+  top: calc(50% - 1px);
+}
+
+.speed-flag {
+  position: absolute;
+  top: 8px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: #ffffff;
+  z-index: 5;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.speed-flag--left {
+  left: 8px;
+  background: var(--color-recher);
+}
+
+.speed-flag--right {
+  right: 8px;
+  background: var(--color-emerald);
+}
+
+.speed-truck {
+  position: absolute;
+  font-size: 2.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 4;
+}
+
+.speed-truck--left {
+  left: 10px;
+}
+
+.speed-truck--right {
+  right: 10px;
+}
+
+.truck-label {
+  font-size: 0.7rem;
+  font-weight: bold;
+  background: rgba(15, 23, 42, 0.85);
+  color: #ffffff;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-top: -2px;
+  white-space: nowrap;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+.meeting-point {
+  position: absolute;
+  left: 45%;
+  font-weight: bold;
+  color: #ffffff;
+  background: var(--color-recher);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  border: 2px solid var(--color-gold);
+  box-shadow: 0 0 15px var(--color-gold-glow);
+  z-index: 6;
+  text-align: center;
+  animation: meetingPulse 1s infinite alternate;
+}
+
+@keyframes meetingPulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 10px var(--color-gold-glow); }
+  100% { transform: scale(1.05); box-shadow: 0 0 20px rgba(239, 68, 68, 0.8); }
+}
+
+.speed-explain {
   font-size: 0.95rem;
   color: var(--color-text-muted);
   text-align: center;
+}
+
+/* 7. Vis: Silver Towers Pattern */
+.vis-towers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.towers-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--space-xs);
+  width: 100%;
+  max-width: 500px;
+  height: 230px;
+  margin-bottom: var(--space-md);
+  padding-bottom: 10px;
+  border-bottom: 2px solid rgba(99, 102, 241, 0.2);
+}
+
+.tower-col {
+  flex: 1;
+  max-width: 65px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.t-col-roof {
+  width: 100%;
+  height: 14px;
+  background: var(--color-recher);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  margin-bottom: -1px;
+}
+
+.t-col-body {
+  background: linear-gradient(180deg, #cbd5e1 0%, #94a3b8 100%);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: var(--color-text-main);
+  height: calc(100% - 14px);
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 2px 4px rgba(0,0,0,0.08);
+}
+
+.tower-col--target .t-col-roof {
+  background: var(--color-gold);
+}
+
+.tower-col--target .t-col-body {
+  background: linear-gradient(180deg, #fef08a 0%, #ca8a04 100%);
+  color: #713f12;
+  border-color: rgba(202, 138, 4, 0.3);
+}
+
+.tower-col--revealed {
+  animation: towerReveal 0.5s ease forwards;
+}
+
+@keyframes towerReveal {
+  0% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+  100% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+}
+
+.tower-col-diff {
+  width: 28px;
+  height: 28px;
+  background: rgba(255,255,255,0.9);
+  border: 2px solid rgba(99, 102, 241, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: var(--transition-smooth);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.tower-col-diff:hover {
+  transform: scale(1.15);
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.tower-col-diff--active {
+  background: var(--color-gold-light);
+  border-color: var(--color-gold);
+  color: #713f12;
+  box-shadow: 0 0 10px var(--color-gold-glow);
+  pointer-events: none;
+}
+
+.towers-explain {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+/* 8. Vis: Monoculus Family Eyes count */
+.vis-eyes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.eyes-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.eyes-summary-box {
+  flex: 1.2;
+  background: #ffffff;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+
+.sum-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.sum-val {
+  font-weight: bold;
+  color: var(--color-text-main);
+}
+
+.eyes-controls {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+
+.eyes-controls label {
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-xs);
+  text-align: center;
+}
+
+.counter-buttons {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.btn-count {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--color-gold);
+  background: #ffffff;
+  color: var(--color-gold);
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+}
+
+.btn-count:hover {
+  background: var(--color-gold-light);
+  color: #713f12;
+  transform: scale(1.1);
+}
+
+.btn-count:active {
+  transform: scale(0.95);
+}
+
+.monsters-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-sm);
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: var(--space-md);
+}
+
+.monster-item {
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 8px 4px;
+  text-align: center;
+  font-size: 1.8rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 70px;
+  transition: var(--transition-smooth);
+}
+
+.monster-item:hover {
+  transform: translateY(-2px);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.monster-item--three {
+  border-color: var(--color-gold);
+  background: #fffdf5;
+  box-shadow: 0 0 10px var(--color-gold-glow);
+}
+
+.m-eyes-badge {
+  font-size: 0.55rem;
+  background: rgba(15, 23, 42, 0.8);
+  color: #ffffff;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-top: 4px;
+  white-space: nowrap;
+}
+
+.eyes-explain {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  min-height: 48px;
 }
 
 /* --- 4. SUCCESS & CERTIFICATE SCREEN --- */

@@ -2,6 +2,7 @@
 // 2 Tasks per gate (Total 10 tasks) - Answers are hidden from pre-solve visualizations
 // Includes speechCorrect dynamic dialogue feedback objects
 import { playClick } from './audio.js';
+import gsap from 'gsap';
 
 export const puzzles = [
   {
@@ -708,7 +709,550 @@ export const puzzles = [
   },
   {
     id: 5,
-    title: "5. Kapı: Kraliçe'nin Zindanı (Mantık Matrisi)",
+    title: "5. Kapı: Kamyon Karşılaşması (Hız ve Zaman)",
+    chapter: "Kanyon Geçidi",
+    character: "Sam",
+    avatar: "👦",
+    narrative: "Aleks ve arkadaşları kanyonun iki ucundan birbirlerine doğru hareket eden Recher'in yük kamyonlarını görürler. Kapıdaki yazıt şöyle der: 'Kanyonun iki ucundaki A ve B kalelerinden aynı anda hareket eden iki kamyonun hızları saatte 45 km ve 54 km'dir. Bu iki araç 20 dakika sonra karşılaştıklarına göre, iki kale arasındaki toplam mesafe kaç kilometredir?'",
+    worksheet: {
+      title: "Kamyon Karşılaşması (Hız ve Zaman)",
+      topic: "Hız, Zaman ve Yol Problemleri",
+      outcome: "Aynı anda birbirine doğru hareket eden iki nesnenin karşılaşma süresini ve toplam yolu hesaplar.",
+      questions: [
+        {
+          id: 1,
+          text: "Hızları saatte 60 km ve 80 km olan iki otomobil, aralarında 280 km mesafe olan iki şehirden aynı anda birbirlerine doğru yola çıkıyorlar. Bu araçlar kaç saat sonra karşılaşırlar? (Çözüm adımlarını yazınız.)",
+          spaceType: "speed-truck-1"
+        },
+        {
+          id: 2,
+          text: "A ve B şehirlerinden aynı anda birbirine doğru hareket eden iki kamyonun hızları sırasıyla 50 km/sa ve 40 km/sa'dir. Bu araçlar yola çıktıktan 3 saat sonra karşılaştıklarına göre A ve B şehirleri arasındaki mesafe kaç kilometredir?",
+          spaceType: "speed-truck-2"
+        }
+      ]
+    },
+    tasks: [
+      {
+        question: "1. Görev: Kamyonlar saatte 45 km and 54 km hızlarla birbirine doğru gidiyor. 20 dakika sonra karşılaştıklarına göre, A ve B kaleleri arasındaki mesafe kaç kilometredir? (Hızları toplayıp saat cinsinden zamanla çarpın: 20 dakika = 1/3 saattir.)",
+        hint: "İpucu: Kamyonlar birbirine doğru geldiği için hızlarını topla: 45 + 54 = 99 km/sa. Karşılaşma süresi 20 dakika, yani 1 saatin 3'te biridir (20/60 = 1/3 sa). Toplam hızı bu süreyle çarp.",
+        solution: "Çözüm: Toplam hız = 45 + 54 = 99 km/sa. Süre = 20 dakika = 20/60 = 1/3 saattir. Yol = Hız * Zaman formülünden: Yol = 99 * (1/3) = 33 km olur.",
+        answer: 33,
+        speechCorrect: {
+          avatar: "👦",
+          name: "Sam",
+          text: "Harika! Hızları birleştirip zamanla çarparak kanyonun genişliğini bulduk ve kamyonların karşılaşmasını simüle ettik. Şimdi kanyon köprüsünden geçebiliriz!"
+        },
+        renderVisualizer: (container) => {
+          container.innerHTML = `
+            <div class="vis-speed">
+              <p class="vis-instruction">Kamyonların hareketini görmek için 'Kamyonları Çalıştır' butonuna tıkla:</p>
+              <div class="speed-road">
+                <div class="speed-flag speed-flag--left">A Kalesi</div>
+                <div class="speed-truck speed-truck--left" id="truck-l">🚚<span class="truck-label">45 km/sa</span></div>
+                <div class="speed-truck speed-truck--right" id="truck-r">🚛<span class="truck-label">54 km/sa</span></div>
+                <div class="speed-flag speed-flag--right">B Kalesi</div>
+                <div class="meeting-point" id="meet-point" style="display:none;">💥 Karşılaşma Noktası (20. Dakika)</div>
+              </div>
+              <div class="vis-actions" style="margin-top: 1.5rem;">
+                <button class="btn btn--secondary" id="btn-run-trucks">Kamyonları Çalıştır 🏁</button>
+                <button class="btn btn--secondary" id="btn-reset-trucks" style="display:none;">Sıfırla 🔄</button>
+              </div>
+              <div class="speed-explain" id="speed-explain">Kamyonları yola çıkarmak için butona tıkla!</div>
+            </div>
+          `;
+
+          const btnRun = container.querySelector('#btn-run-trucks');
+          const btnReset = container.querySelector('#btn-reset-trucks');
+          const truckL = container.querySelector('#truck-l');
+          const truckR = container.querySelector('#truck-r');
+          const meetPoint = container.querySelector('#meet-point');
+          const explain = container.querySelector('#speed-explain');
+
+          btnRun.addEventListener('click', () => {
+            playClick();
+            btnRun.style.display = 'none';
+            btnReset.style.display = 'inline-block';
+            
+            gsap.to(truckL, { left: '42%', duration: 2, ease: 'power1.inOut' });
+            gsap.to(truckR, { right: '53%', duration: 2, ease: 'power1.inOut', onComplete: () => {
+              meetPoint.style.display = 'block';
+              gsap.fromTo(meetPoint, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(1.7)' });
+              explain.innerHTML = `
+                <strong>Karşılaşma Analizi:</strong><br>
+                - Kamyonlar birbirine doğru hareket ettiği için saatteki yaklaşma hızları: <span class="text-accent">45 + 54 = 99 km</span>'dir.<br>
+                - 20 dakika karşılaşma süresi, 1 saatin 3'te biridir (20/60 = 1/3 saat).<br>
+                - Toplam yol: 99 × (1/3) = <span class="text-emerald" style="font-weight:bold;">33 km</span>.<br>
+                Cevabı hesaplayıp aşağıdaki kutuya girin!
+              `;
+            } });
+          });
+
+          btnReset.addEventListener('click', () => {
+            playClick();
+            btnReset.style.display = 'none';
+            btnRun.style.display = 'inline-block';
+            meetPoint.style.display = 'none';
+            gsap.set(truckL, { left: '10px' });
+            gsap.set(truckR, { right: '10px' });
+            explain.textContent = "Kamyonları yola çıkarmak için butona tıkla!";
+          });
+        }
+      },
+      {
+        question: "2. Görev: Kanyonun diğer tarafındaki iki kamyonun hızları 50 km/sa ve 60 km/sa'dir. Karşılaşma süreleri yine 30 dakika (1/2 saat) olduğuna göre aralarındaki toplam mesafe kaç kilometredir?",
+        hint: "İpucu: Hızları toplayıp (50 + 60 = 110 km/sa) süre olan 1/2 saat ile çarpın.",
+        solution: "Çözüm: Hızlar toplamı = 50 + 60 = 110 km/sa. Süre = 30 dakika = 1/2 saat. Yol = 110 * 1/2 = 55 km olur.",
+        answer: 55,
+        speechCorrect: {
+          avatar: "👑",
+          name: "Kral Recher",
+          text: "Hayır! Kanyon yolundaki kamyonları çarpmadan yönlendirdiniz... Ama önünüzdeki parıldayan gümüş kulelerin yükseklik kuralını çözemezsiniz!"
+        },
+        renderVisualizer: (container) => {
+          container.innerHTML = `
+            <div class="vis-speed">
+              <p class="vis-instruction">İkinci karşılaşma durumunu simüle et:</p>
+              <div class="speed-road">
+                <div class="speed-flag speed-flag--left">A Kalesi</div>
+                <div class="speed-truck speed-truck--left" id="truck-l">🚚<span class="truck-label">50 km/sa</span></div>
+                <div class="speed-truck speed-truck--right" id="truck-r">🚛<span class="truck-label">60 km/sa</span></div>
+                <div class="speed-flag speed-flag--right">B Kalesi</div>
+                <div class="meeting-point" id="meet-point" style="display:none;">💥 Karşılaşma Noktası (30. Dakika)</div>
+              </div>
+              <div class="vis-actions" style="margin-top: 1.5rem;">
+                <button class="btn btn--secondary" id="btn-run-trucks">Kamyonları Çalıştır 🏁</button>
+                <button class="btn btn--secondary" id="btn-reset-trucks" style="display:none;">Sıfırla 🔄</button>
+              </div>
+              <div class="speed-explain" id="speed-explain">Kamyonları çalıştırmak için butona tıkla!</div>
+            </div>
+          `;
+
+          const btnRun = container.querySelector('#btn-run-trucks');
+          const btnReset = container.querySelector('#btn-reset-trucks');
+          const truckL = container.querySelector('#truck-l');
+          const truckR = container.querySelector('#truck-r');
+          const meetPoint = container.querySelector('#meet-point');
+          const explain = container.querySelector('#speed-explain');
+
+          btnRun.addEventListener('click', () => {
+            playClick();
+            btnRun.style.display = 'none';
+            btnReset.style.display = 'inline-block';
+            
+            gsap.to(truckL, { left: '42%', duration: 2, ease: 'power1.inOut' });
+            gsap.to(truckR, { right: '53%', duration: 2, ease: 'power1.inOut', onComplete: () => {
+              meetPoint.style.display = 'block';
+              gsap.fromTo(meetPoint, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(1.7)' });
+              explain.innerHTML = `
+                <strong>Karşılaşma Analizi:</strong><br>
+                - Kamyonlar birbirine doğru hareket ettiği için saatteki yaklaşma hızları: <span class="text-accent">50 + 60 = 110 km</span>'dir.<br>
+                - 30 dakika karşılaşma süresi, 1 saatin yarısıdır (1/2 saat).<br>
+                - Toplam yol: 110 × (1/2) = <span class="text-emerald" style="font-weight:bold;">55 km</span>.<br>
+                Hesaplamayı yapıp cevabını aşağıya girin!
+              `;
+            } });
+          });
+
+          btnReset.addEventListener('click', () => {
+            playClick();
+            btnReset.style.display = 'none';
+            btnRun.style.display = 'inline-block';
+            meetPoint.style.display = 'none';
+            gsap.set(truckL, { left: '10px' });
+            gsap.set(truckR, { right: '10px' });
+            explain.textContent = "Kamyonları çalıştırmak için butona tıkla!";
+          });
+        }
+      }
+    ]
+  },
+  {
+    id: 6,
+    title: "6. Kapı: Gümüş Kuleler (Yükseklik Örüntüleri)",
+    chapter: "Kraliyet Bahçesi",
+    character: "Vanessa",
+    avatar: "👧",
+    narrative: "Bahçede yan yana sıralanmış gümüş kuleler yükselmektedir. Vanessa kulelerin altındaki yazıyı okur: 'Kulelerin yükseklikleri belirli bir kurala göre sıralanmıştır. İlk kule 3 metre, ikinci kule 7 metre, üçüncü kule 11 metredir. Bu şekilde devam eden gümüş kulelerin 5. olanının yüksekliğini bularak kapıyı açın!'",
+    worksheet: {
+      title: "Gümüş Kuleler (Yükseklik Örüntüleri)",
+      topic: "Sayı ve Şekil Örüntüleri",
+      outcome: "Aritmetik olarak artan örüntülerde terimler arasındaki ilişkiyi bulur ve verilmeyen terimi hesaplar.",
+      questions: [
+        {
+          id: 1,
+          text: "Bir sayı örüntüsü 8'den başlayıp her adımda 6 artarak ilerlemektedir. Bu örüntünün 6. adımındaki sayı kaçtır? (Örüntüyü adım adım yazarak bulunuz.)",
+          spaceType: "pattern-towers-1"
+        },
+        {
+          id: 2,
+          text: "Yükseklikleri sırasıyla 5 cm, 12 cm, 19 cm, 26 cm... şeklinde artan bir bitkinin 7. haftanın sonundaki boyu kaç santimetre olur?",
+          spaceType: "pattern-towers-2"
+        }
+      ]
+    },
+    tasks: [
+      {
+        question: "1. Görev: İlk kulesi 3 m, ikincisi 7 m, üçüncüsü 11 m olan gümüş kuleler örüntüsünde 5. kulenin yüksekliği kaç metredir?",
+        hint: "İpucu: Örüntünün kuralını bul! Sayılar kaçar kaçar artıyor? 3, 7, 11... Her adımda 4 eklendiğini göreceksin. 4. ve 5. kulelerin yüksekliklerini bu kurala göre hesapla.",
+        solution: "Çözüm: Kule yükseklikleri örüntüsü: 1. kule = 3m, 2. kule = 7m (+4), 3. kule = 11m (+4) şeklindedir. Kural: Her kule bir öncekinden 4 metre daha yüksektir. O halde: 4. kule = 11 + 4 = 15m, 5. kule = 15 + 4 = 19m olur.",
+        answer: 19,
+        speechCorrect: {
+          avatar: "👧",
+          name: "Vanessa",
+          text: "Kulelerin yükseklik örüntüsünü çözdük! 5. kulenin tepesinden sihirli geçidin anahtarını aldım. Şimdi ikinci kulenin örüntüsüne geçelim!"
+        },
+        renderVisualizer: (container) => {
+          container.innerHTML = `
+            <div class="vis-towers">
+              <p class="vis-instruction">Kulelerin yüksekliklerini görmek ve örüntüyü incelemek için aradaki soru işaretlerine tıkla:</p>
+              <div class="towers-row">
+                <div class="tower-col" id="t-col-1" style="height: 50px;" data-height="3">
+                  <div class="t-col-roof"></div><div class="t-col-body">3m</div>
+                </div>
+                <div class="tower-col-diff" id="t-diff-1">?</div>
+                <div class="tower-col" id="t-col-2" style="height: 85px;" data-height="7">
+                  <div class="t-col-roof"></div><div class="t-col-body">7m</div>
+                </div>
+                <div class="tower-col-diff" id="t-diff-2">?</div>
+                <div class="tower-col" id="t-col-3" style="height: 120px;" data-height="11">
+                  <div class="t-col-roof"></div><div class="t-col-body">11m</div>
+                </div>
+                <div class="tower-col-diff" id="t-diff-3">?</div>
+                <div class="tower-col" id="t-col-4" style="height: 155px;" data-height="15">
+                  <div class="t-col-roof"></div><div class="t-col-body">?</div>
+                </div>
+                <div class="tower-col-diff" id="t-diff-4">?</div>
+                <div class="tower-col tower-col--target" id="t-col-5" style="height: 190px;" data-height="19">
+                  <div class="t-col-roof"></div><div class="t-col-body">?</div>
+                </div>
+              </div>
+              <div class="towers-explain" id="towers-explain">Farkları görmek için aradaki ? işaretlerine tıkla!</div>
+            </div>
+          `;
+
+          const cols = container.querySelectorAll('.tower-col');
+          const diffs = container.querySelectorAll('.tower-col-diff');
+          const explain = container.querySelector('#towers-explain');
+
+          diffs.forEach((diff, i) => {
+            diff.addEventListener('click', () => {
+              playClick();
+              diff.textContent = "+4";
+              diff.classList.add('tower-col-diff--active');
+              
+              if (i === 0) explain.innerHTML = "1. kule ile 2. kule arasındaki fark: <span class='text-accent'>4 metre</span>.";
+              else if (i === 1) explain.innerHTML = "2. kule ile 3. kule arasındaki fark: <span class='text-accent'>4 metre</span>.";
+              else if (i === 2) {
+                cols[3].querySelector('.t-col-body').textContent = "15m";
+                cols[3].classList.add('tower-col--revealed');
+                explain.innerHTML = "Kurala göre 4. kulenin yüksekliği: 11 + 4 = <span class='text-accent'>15 metre</span> olur.";
+              }
+              else if (i === 3) {
+                cols[4].querySelector('.t-col-body').textContent = "?";
+                cols[4].classList.add('tower-col--revealed');
+                explain.innerHTML = "Örüntü sürekli 4 metre artarak gidiyor. Bu durumda 5. kulenin yüksekliği kaç metre olmalıdır? Cevabını hesapla ve aşağıya gir!";
+              }
+            });
+          });
+        }
+      },
+      {
+        question: "2. Görev: İkinci kule sırasındaki örüntü: 5, 12, 19, 26, [?] şeklindedir. Örüntüdeki 5. terim kaçtır?",
+        hint: "İpucu: Farkları incele! 5'ten 12'ye artış kaç? 7 artış var. Örüntü 7'şer 7'şer artmaktadır. Son sayıya 7 ekle.",
+        solution: "Çözüm: Artış miktarı: 12 - 5 = 7'dir. 19 - 12 = 7, 26 - 19 = 7'dir. Kural: Her sayı bir öncekinden 7 fazladır. O halde 5. terim: 26 + 7 = 33 olmalıdır.",
+        answer: 33,
+        speechCorrect: {
+          avatar: "👑",
+          name: "Kral Recher",
+          text: "Olamaz! Gümüş kulelerin şifresini de çözdünüz... Ama karanlık mağaradaki tek gözlülerin mağara gözü sayacı sizi durduracak!"
+        },
+        renderVisualizer: (container) => {
+          container.innerHTML = `
+            <div class="vis-towers">
+              <p class="vis-instruction">İkinci örüntünün farklarını görmek için soru işaretlerine tıkla:</p>
+              <div class="towers-row">
+                <div class="tower-col" id="t-col-1" style="height: 50px;" data-height="5">
+                  <div class="t-col-roof"></div><div class="t-col-body">5</div>
+                </div>
+                <div class="tower-col-diff" id="t-diff-1">?</div>
+                <div class="tower-col" id="t-col-2" style="height: 85px;" data-height="12">
+                  <div class="t-col-roof"></div><div class="t-col-body">12</div>
+                </div>
+                <div class="tower-col-diff" id="t-diff-2">?</div>
+                <div class="tower-col" id="t-col-3" style="height: 120px;" data-height="19">
+                  <div class="t-col-roof"></div><div class="t-col-body">19</div>
+                </div>
+                <div class="tower-col-diff" id="t-diff-3">?</div>
+                <div class="tower-col" id="t-col-4" style="height: 155px;" data-height="26">
+                  <div class="t-col-roof"></div><div class="t-col-body">26</div>
+                </div>
+                <div class="tower-col-diff" id="t-diff-4">?</div>
+                <div class="tower-col tower-col--target" id="t-col-5" style="height: 190px;" data-height="33">
+                  <div class="t-col-roof"></div><div class="t-col-body">?</div>
+                </div>
+              </div>
+              <div class="towers-explain" id="towers-explain">Farkları görmek için aradaki ? işaretlerine tıkla!</div>
+            </div>
+          `;
+
+          const cols = container.querySelectorAll('.tower-col');
+          const diffs = container.querySelectorAll('.tower-col-diff');
+          const explain = container.querySelector('#towers-explain');
+
+          diffs.forEach((diff, i) => {
+            diff.addEventListener('click', () => {
+              playClick();
+              diff.textContent = "+7";
+              diff.classList.add('tower-col-diff--active');
+              
+              if (i === 0) explain.innerHTML = "5'ten 12'ye artış: <span class='text-accent'>7</span>.";
+              else if (i === 1) explain.innerHTML = "12'den 19'a artış: <span class='text-accent'>7</span>.";
+              else if (i === 2) explain.innerHTML = "19'dan 26'ya artış: <span class='text-accent'>7</span>.";
+              else if (i === 3) {
+                cols[4].querySelector('.t-col-body').textContent = "?";
+                cols[4].classList.add('tower-col--revealed');
+                explain.innerHTML = "Örüntü kuralı sürekli +7 şeklinde ilerliyor. 26'ya 7 ekleyerek 5. terimi hesapla ve gir!";
+              }
+            });
+          });
+        }
+      }
+    ]
+  },
+  {
+    id: 7,
+    title: "7. Kapı: Monoculus Soyu (Canavar Gözleri)",
+    chapter: "Karanlık Mağara",
+    character: "Monoculus",
+    avatar: "👁️",
+    narrative: "Aleks ve arkadaşlarının karşısına Monoculus'un arkadaşları çıkar. Bazıları tek gözlü, bazıları ise 3 gözlüdür. Monoculus fısıldar: 'Mağarada toplam 9 canavar arkadaşım var. Hepimizin toplam göz sayısı 17'dir. Acaba aramızda kaç tane 3 gözlü canavar vardır?'",
+    worksheet: {
+      title: "Monoculus Soyu (Göz Sayıları)",
+      topic: "Dört İşlem Problemleri ve Modelleme",
+      outcome: "İki farklı bilinmeyen barındıran problemleri varsayımda bulunma veya kutu modelleme yöntemiyle çözer.",
+      questions: [
+        {
+          id: 1,
+          text: "Bir çiftlikteki tavuk ve tavşanların toplam sayısı 15'tir. Bu hayvanların toplam ayak sayısı 44 olduğuna göre çiftlikte kaç tavşan vardır? (Hayvanları kutu modeli ile çizerek çözünüz.)",
+          spaceType: "monster-eyes-1"
+        },
+        {
+          id: 2,
+          text: "20 soruluk bir sınavda her doğru cevap için 5 puan verilmekte, her yanlış cevap için ise 2 puan silinmektedir. Tüm soruları yanıtlayan bir öğrenci 58 puan aldığına göre kaç soruyu doğru yanıtlamıştır?",
+          spaceType: "monster-eyes-2"
+        }
+      ]
+    },
+    tasks: [
+      {
+        question: "1. Görev: Toplamda 9 canavarın bulunduğu ve toplam göz sayısının 17 olduğu bu grupta, 3 gözlü canavarların sayısı kaçtır?",
+        hint: "İpucu: Varsayımda bulun! Eğer canavarların hepsi 1 gözlü olsaydı toplam 9 * 1 = 9 göz olurdu. Kalan 17 - 9 = 8 gözü canavarlara ikişer ikişer dağıtarak (çünkü 3 gözlünün 1 gözlüye göre 2 fazla gözü vardır) kaç canavarın 3 gözlü olduğunu bul.",
+        solution: "Çözüm: Hepsi 1 gözlü olsaydı: 9 * 1 = 9 göz olurdu. Gerçek göz sayısı 17 olduğuna göre fark: 17 - 9 = 8 gözdür. Her 3 gözlü canavarın 1 gözlüden 2 fazla gözü vardır. 8 / 2 = 4 canavar 3 gözlüdür. Kalan 9 - 4 = 5 canavar ise 1 gözlüdür. Kontrol edelim: (4 * 3) + (5 * 1) = 12 + 5 = 17 göz. Doğru!",
+        answer: 4,
+        speechCorrect: {
+          avatar: "👁️",
+          name: "Monoculus",
+          text: "Harika! Benim soyumun göz bilmecesini çözdün. 3 gözlü kardeşlerim sana yolu gösterecek. Ama durun, mağarada ikinci bir canavar grubu daha var!"
+        },
+        renderVisualizer: (container) => {
+          container.innerHTML = `
+            <div class="vis-eyes">
+              <p class="vis-instruction">3 Gözlü canavar sayısını ayarlayarak toplam göz sayısını 17 yapın:</p>
+              
+              <div class="eyes-layout">
+                <div class="eyes-summary-box">
+                  <div class="sum-row">Toplam Canavar: <span class="sum-val">9</span></div>
+                  <div class="sum-row">Hedef Göz Sayısı: <span class="sum-val text-accent" style="font-weight:bold;">17</span></div>
+                  <div class="sum-row">Şu Anki Göz: <span class="sum-val" id="current-eyes-lbl">9</span></div>
+                </div>
+                
+                <div class="eyes-controls">
+                  <div class="control-group">
+                    <label>3 Gözlü Canavar Sayısı (<span id="three-eyes-lbl" style="font-weight:bold; color:var(--color-gold);">0</span>):</label>
+                    <div class="counter-buttons">
+                      <button class="btn-count" id="btn-dec-3">-</button>
+                      <button class="btn-count" id="btn-inc-3">+</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="monsters-grid" id="monsters-grid"></div>
+              <div class="eyes-explain" id="eyes-explain">Canavarların hepsi şu an 1 gözlü (toplam 9 göz). 3 gözlü canavarların sayısını arttırarak toplam gözü 17 yapın!</div>
+            </div>
+          `;
+
+          const btnInc = container.querySelector('#btn-inc-3');
+          const btnDec = container.querySelector('#btn-dec-3');
+          const threeLbl = container.querySelector('#three-eyes-lbl');
+          const currentLbl = container.querySelector('#current-eyes-lbl');
+          const grid = container.querySelector('#monsters-grid');
+          const explain = container.querySelector('#eyes-explain');
+
+          let threeCount = 0;
+          const totalMonsters = 9;
+
+          function updateMonsters() {
+            threeLbl.textContent = threeCount;
+            const oneCount = totalMonsters - threeCount;
+            const currentEyes = (threeCount * 3) + (oneCount * 1);
+            currentLbl.textContent = currentEyes;
+
+            grid.innerHTML = '';
+            for (let i = 0; i < totalMonsters; i++) {
+              const monster = document.createElement('div');
+              monster.className = 'monster-item';
+              if (i < threeCount) {
+                monster.classList.add('monster-item--three');
+                monster.innerHTML = `👾<span class="m-eyes-badge">👁️👁️👁️</span>`;
+              } else {
+                monster.innerHTML = `👾<span class="m-eyes-badge">👁️</span>`;
+              }
+              grid.appendChild(monster);
+            }
+
+            if (currentEyes === 17) {
+              currentLbl.className = 'sum-val text-emerald';
+              currentLbl.style.fontWeight = 'bold';
+              explain.innerHTML = `
+                <span class="text-emerald" style="font-weight:bold;">Tebrikler! Toplam Göz 17 Oldu!</span><br>
+                - 3 Gözlü Canavar Sayısı = <span class="text-gold">${threeCount}</span><br>
+                - 1 Gözlü Canavar Sayısı = <span class="text-gold">${oneCount}</span><br>
+                Cevap olan 3 gözlü canavar sayısını aşağıdaki kutuya girin!
+              `;
+            } else {
+              currentLbl.className = 'sum-val';
+              currentLbl.style.fontWeight = 'normal';
+              explain.textContent = `Toplam Göz: ${currentEyes} (Hedef: 17). Canavarları ayarlamaya devam et.`;
+            }
+          }
+
+          btnInc.addEventListener('click', () => {
+            playClick();
+            if (threeCount < totalMonsters) {
+              threeCount++;
+              updateMonsters();
+            }
+          });
+
+          btnDec.addEventListener('click', () => {
+            playClick();
+            if (threeCount > 0) {
+              threeCount--;
+              updateMonsters();
+            }
+          });
+
+          updateMonsters();
+        }
+      },
+      {
+        question: "2. Görev: Mağaranın diğer köşesindeki ikinci canavar grubunda toplam 8 canavar vardır. Hepsi ya tek gözlü ya da 3 gözlüdür. Toplam göz sayısı 14 olduğuna göre, 3 gözlü canavarların sayısı kaçtır?",
+        hint: "İpucu: Varsayım yap! Tamamı tek gözlü olsaydı 8 * 1 = 8 göz olurdu. Kalan 14 - 8 = 6 gözü ikişer ikişer dağıtarak kaç tane 3 gözlü olduğunu bul.",
+        solution: "Çözüm: Hepsi 1 gözlü olsaydı: 8 * 1 = 8 göz olurdu. Gerçek göz 14 ise fark: 14 - 8 = 6 gözdür. Her 3 gözlü için +2 göz eklendiğinden: 6 / 2 = 3 canavar 3 gözlüdür.",
+        answer: 3,
+        speechCorrect: {
+          avatar: "👑",
+          name: "Kral Recher",
+          text: "Lanet olsun! Canavar mağarasından da geçtiniz... Ama Kraliçe Jayden'ı esir tuttuğum son kapıdaki sandık yalan/doğru mantık problemini asla çözemeyeceksiniz!"
+        },
+        renderVisualizer: (container) => {
+          container.innerHTML = `
+            <div class="vis-eyes">
+              <p class="vis-instruction">3 Gözlü canavar sayısını ayarlayarak toplam göz sayısını 14 yapın:</p>
+              
+              <div class="eyes-layout">
+                <div class="eyes-summary-box">
+                  <div class="sum-row">Toplam Canavar: <span class="sum-val">8</span></div>
+                  <div class="sum-row">Hedef Göz Sayısı: <span class="sum-val text-accent" style="font-weight:bold;">14</span></div>
+                  <div class="sum-row">Şu Anki Göz: <span class="sum-val" id="current-eyes-lbl">8</span></div>
+                </div>
+                
+                <div class="eyes-controls">
+                  <div class="control-group">
+                    <label>3 Gözlü Canavar Sayısı (<span id="three-eyes-lbl" style="font-weight:bold; color:var(--color-gold);">0</span>):</label>
+                    <div class="counter-buttons">
+                      <button class="btn-count" id="btn-dec-3">-</button>
+                      <button class="btn-count" id="btn-inc-3">+</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="monsters-grid" id="monsters-grid"></div>
+              <div class="eyes-explain" id="eyes-explain">Canavarların hepsi şu an 1 gözlü (toplam 8 göz). 3 gözlü canavarların sayısını ayarlayarak toplam gözü 14 yapın!</div>
+            </div>
+          `;
+
+          const btnInc = container.querySelector('#btn-inc-3');
+          const btnDec = container.querySelector('#btn-dec-3');
+          const threeLbl = container.querySelector('#three-eyes-lbl');
+          const currentLbl = container.querySelector('#current-eyes-lbl');
+          const grid = container.querySelector('#monsters-grid');
+          const explain = container.querySelector('#eyes-explain');
+
+          let threeCount = 0;
+          const totalMonsters = 8;
+
+          function updateMonsters() {
+            threeLbl.textContent = threeCount;
+            const oneCount = totalMonsters - threeCount;
+            const currentEyes = (threeCount * 3) + (oneCount * 1);
+            currentLbl.textContent = currentEyes;
+
+            grid.innerHTML = '';
+            for (let i = 0; i < totalMonsters; i++) {
+              const monster = document.createElement('div');
+              monster.className = 'monster-item';
+              if (i < threeCount) {
+                monster.classList.add('monster-item--three');
+                monster.innerHTML = `👾<span class="m-eyes-badge">👁️👁️👁️</span>`;
+              } else {
+                monster.innerHTML = `👾<span class="m-eyes-badge">👁️</span>`;
+              }
+              grid.appendChild(monster);
+            }
+
+            if (currentEyes === 14) {
+              currentLbl.className = 'sum-val text-emerald';
+              currentLbl.style.fontWeight = 'bold';
+              explain.innerHTML = `
+                <span class="text-emerald" style="font-weight:bold;">Tebrikler! Toplam Göz 14 Oldu!</span><br>
+                - 3 Gözlü Canavar Sayısı = <span class="text-gold">${threeCount}</span><br>
+                - 1 Gözlü Canavar Sayısı = <span class="text-gold">${oneCount}</span><br>
+                Cevap olan 3 gözlü canavar sayısını aşağıdaki kutuya girin!
+              `;
+            } else {
+              currentLbl.className = 'sum-val';
+              currentLbl.style.fontWeight = 'normal';
+              explain.textContent = `Toplam Göz: ${currentEyes} (Hedef: 14). Canavarları ayarlamaya devam et.`;
+            }
+          }
+
+          btnInc.addEventListener('click', () => {
+            playClick();
+            if (threeCount < totalMonsters) {
+              threeCount++;
+              updateMonsters();
+            }
+          });
+
+          btnDec.addEventListener('click', () => {
+            playClick();
+            if (threeCount > 0) {
+              threeCount--;
+              updateMonsters();
+            }
+          });
+
+          updateMonsters();
+        }
+      }
+    ]
+  },
+  {
+    id: 8,
+    title: "8. Kapı: Kraliçe'nin Zindanı (Mantık Matrisi)",
     chapter: "Büyük Salon",
     character: "Kraliçe Jayden",
     avatar: "🧝‍♀️",
