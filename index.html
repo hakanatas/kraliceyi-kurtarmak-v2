@@ -86,30 +86,31 @@
           <div class="hero-right">
             <div class="video-showcase glass-panel">
               <!-- Default: Showcase the gorgeous castle illustration -->
-              <div class="illustration-wrapper" id="heroIllustrationWrapper">
-                <img src="/landing_illustration.png" alt="Lugubriya Krallığı Şatosu" class="hero-illustration" />
-                <button class="btn btn--secondary btn--small play-teaser-btn" id="btnToggleTeaser">
-                  🎬 Tanıtım Videosunu İzle
-                </button>
-              </div>
-              
-              <!-- Hidden Video Wrapper, shown when clicking the play-teaser button -->
-              <div class="video-wrapper" id="heroVideoWrapper" style="display: none;">
+              <!-- Default: Showcase the video directly -->
+              <div class="video-wrapper" id="heroVideoWrapper">
                 <video id="teaserVideo" playsinline preload="auto">
                   <source src="/intro.mp4" type="video/mp4" />
                   Tarayıcınız video etiketini desteklemiyor.
                 </video>
                 <div class="video-controls-overlay">
                   <button class="video-control-btn" id="btnPlayPauseVideo" aria-label="Oynat / Duraklat" title="Oynat / Duraklat">
-                    <span class="video-icon">▶️</span>
+                    <span class="video-icon">⏸️</span>
                   </button>
                   <button class="video-control-btn" id="btnMuteVideo" aria-label="Sesi Aç / Kapat" title="Sesi Aç / Kapat">
-                    <span class="video-icon">🔇</span>
+                    <span class="video-icon">🔊</span>
                   </button>
                   <button class="video-control-btn" id="btnBackToIllustration" aria-label="Geri Dön" title="Görsele Dön">
                     <span class="video-icon">🖼️</span>
                   </button>
                 </div>
+              </div>
+
+              <!-- Hidden Illustration Wrapper, shown when back button is clicked or video ends -->
+              <div class="illustration-wrapper" id="heroIllustrationWrapper" style="display: none;">
+                <img src="/landing_illustration.png" alt="Lugubriya Krallığı Şatosu" class="hero-illustration" />
+                <button class="btn btn--secondary btn--small play-teaser-btn" id="btnToggleTeaser">
+                  🎬 Tanıtım Videosunu Tekrar İzle
+                </button>
               </div>
               <div class="video-caption" id="showcaseCaption">
                 🏰 Lugubriya Krallığı ve Zümrüt Kraliçe'nin Dünyası

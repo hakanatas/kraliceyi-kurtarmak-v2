@@ -124,10 +124,25 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Teaser Video Controls
+  // Teaser Video Controls & Transition
   const teaserVideo = document.getElementById('teaserVideo');
   const btnPlayPauseVideo = document.getElementById('btnPlayPauseVideo');
   const btnMuteVideo = document.getElementById('btnMuteVideo');
+
+  function transitionToIllustration() {
+    if (teaserVideo) {
+      teaserVideo.pause();
+    }
+    gsap.to(heroVideoWrapper, {
+      opacity: 0,
+      duration: 0.3,
+      onComplete: () => {
+        heroVideoWrapper.style.display = 'none';
+        heroIllustrationWrapper.style.display = 'block';
+        gsap.fromTo(heroIllustrationWrapper, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+      }
+    });
+  }
 
   if (teaserVideo && btnPlayPauseVideo && btnMuteVideo) {
     btnPlayPauseVideo.addEventListener('click', (e) => {
@@ -159,9 +174,9 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     teaserVideo.addEventListener('ended', () => {
       btnPlayPauseVideo.innerHTML = '<span class="video-icon">▶️</span>';
+      transitionToIllustration();
     });
   }
-
   // V2 Tab Bindings in modal
   if (tabBtnInteractive && tabBtnWorksheet) {
     tabBtnInteractive.addEventListener('click', () => {
@@ -233,21 +248,31 @@ window.addEventListener('DOMContentLoaded', () => {
     btnBackToIllustration.addEventListener('click', (e) => {
       e.stopPropagation();
       playSoundEffect(playClick);
-      
-      if (teaserVideo) {
-        teaserVideo.pause();
-      }
-
-      gsap.to(heroVideoWrapper, {
-        opacity: 0,
-        duration: 0.3,
-        onComplete: () => {
-          heroVideoWrapper.style.display = 'none';
-          heroIllustrationWrapper.style.display = 'block';
-          gsap.fromTo(heroIllustrationWrapper, { opacity: 0 }, { opacity: 1, duration: 0.3 });
-        }
-      });
+      transitionToIllustration();
     });
+  }
+
+  // Autoplay video on load (unmuted by default, browser fallback to muted + unmute on interaction)
+  if (teaserVideo && btnMuteVideo) {
+    teaserVideo.muted = false;
+    const playPromise = teaserVideo.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(error => {
+        console.log("Autoplay unmuted blocked by browser, falling back to muted autoplay...");
+        teaserVideo.muted = true;
+        btnMuteVideo.innerHTML = '<span class="video-icon">🔇</span>';
+        teaserVideo.play().catch(e => console.log("Muted autoplay failed too:", e));
+        
+        // Listen for first interaction on body to unmute
+        const unmuteOnInteraction = () => {
+          teaserVideo.muted = false;
+          btnMuteVideo.innerHTML = '<span class="video-icon">🔊</span>';
+          teaserVideo.play().catch(e => {});
+          document.body.removeEventListener('click', unmuteOnInteraction);
+        };
+        document.body.addEventListener('click', unmuteOnInteraction);
+      });
+    }
   }
 
   setupMapTooltips();
