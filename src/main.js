@@ -187,7 +187,15 @@ window.addEventListener('DOMContentLoaded', () => {
       playSoundEffect(playClick);
       let name = playerNameInput.value.trim();
       if (name === '') {
-        name = prompt("Yazdırılacak çalışma kağıdı için adınızı girin (isteğe bağlı):") || "Öğrenci Kaşif";
+        const defaultNames = [
+          "Matematik Kaşifi Aleks",
+          "Zümrüt Koruyucusu Vanessa",
+          "Sihirli Sayı Ustası Sam",
+          "Lugubriya Kahramanı Aleks",
+          "Gizem Çözücü Vanessa",
+          "Labirent Gezgini Sam"
+        ];
+        name = defaultNames[Math.floor(Math.random() * defaultNames.length)];
       }
       
       // Fill name in printable worksheet header

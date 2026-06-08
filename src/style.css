@@ -2730,17 +2730,28 @@ h1, h2, h3, h4, h5, h6, .hero-title, .about-title, .logo {
 }
 
 @media print {
+  /* Force color print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
   /* Hide all elements except the printable container */
   body > *:not(#printableWorksheet) {
     display: none !important;
   }
   
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm 12mm 15mm;
+  }
+  
   html, body {
     background: #ffffff !important;
-    color: #000000 !important;
+    color: #1e293b !important;
     min-height: auto !important;
-    font-size: 10.5pt !important;
-    font-family: 'Georgia', 'Times New Roman', serif !important;
+    font-size: 9.5pt !important;
+    font-family: 'Comfortaa', system-ui, -apple-system, sans-serif !important;
     margin: 0 !important;
     padding: 0 !important;
   }
@@ -2755,67 +2766,78 @@ h1, h2, h3, h4, h5, h6, .hero-title, .about-title, .logo {
     top: 0;
     width: 100%;
     background: #ffffff !important;
-    padding: 20px 40px !important;
+    padding: 0 !important;
   }
   
   .ws-print-header {
-    border-bottom: 2.5px double #000000;
+    border-bottom: 3px solid #fbbf24;
     padding-bottom: 8px;
-    margin-bottom: 15px;
-    text-align: center;
+    margin-bottom: 12px;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
   }
   
   .ws-header-title {
-    font-size: 14pt;
-    font-weight: bold;
-    letter-spacing: 0.05em;
-    margin-bottom: 8px;
-    color: #000000 !important;
-    font-family: sans-serif;
+    font-size: 13pt;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    margin-bottom: 6px;
+    color: #4338ca !important;
+    font-family: 'Fredoka', system-ui, sans-serif;
+    text-align: center;
   }
   
   .ws-header-meta {
-    display: flex;
+    display: flex !important;
+    flex-direction: row;
     justify-content: space-between;
-    font-size: 9pt;
-    font-family: sans-serif;
+    width: 100%;
+    font-size: 8.5pt;
+    font-family: inherit;
+    color: #4b5563 !important;
   }
   
   .ws-section-box {
-    border: 1px solid #000000;
+    border: 1px solid #c7d2fe;
     padding: 8px 12px;
-    margin-bottom: 12px;
-    background: #f8fafc !important;
-    border-radius: 4px;
+    margin-bottom: 10px;
+    background: #f5f3ff !important;
+    border-radius: 6px;
   }
   
   .ws-section-box h3 {
-    font-size: 11pt;
-    font-weight: bold;
+    font-size: 10.5pt;
+    font-weight: 800;
     margin-bottom: 4px;
     text-transform: uppercase;
-    font-family: sans-serif;
+    color: #4f46e5 !important;
+    font-family: 'Fredoka', system-ui, sans-serif;
   }
   
   .ws-section-box p {
     margin: 2px 0;
-    font-size: 9pt;
+    font-size: 8.5pt;
     line-height: 1.3;
+    color: #4b5563 !important;
   }
   
   .ws-intro-story {
+    font-size: 8.5pt;
+    line-height: 1.35;
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    background: #fffbeb !important;
+    border-left: 4px solid #f59e0b;
+    border-radius: 4px;
     font-style: italic;
-    font-size: 9pt;
-    line-height: 1.4;
-    margin-bottom: 15px;
-    padding: 6px 10px;
-    border-left: 3px solid #000000;
+    color: #78350f !important;
   }
   
   .ws-questions-container {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 12px;
   }
   
   .ws-q-block {
@@ -2823,42 +2845,46 @@ h1, h2, h3, h4, h5, h6, .hero-title, .about-title, .logo {
   }
   
   .ws-q-header {
-    font-weight: bold;
-    font-size: 10pt;
+    font-weight: 800;
+    font-size: 9.5pt;
     margin-bottom: 4px;
-    font-family: sans-serif;
-    border-bottom: 1px dashed #000000;
-    padding-bottom: 2px;
+    font-family: 'Fredoka', system-ui, sans-serif;
+    background: #10b981 !important;
+    color: #ffffff !important;
+    padding: 3px 10px;
+    border-radius: 4px;
+    display: inline-block !important;
   }
   
   .ws-q-text {
-    font-size: 9.5pt;
-    line-height: 1.35;
-    margin-bottom: 8px;
+    font-size: 9pt;
+    line-height: 1.3;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #1f2937 !important;
   }
   
   .ws-working-space {
-    margin-top: 6px;
+    margin-top: 4px;
   }
   
   .ws-space-title {
-    font-size: 8.5pt;
-    font-weight: bold;
-    margin-bottom: 4px;
-    color: #444444;
-    font-family: sans-serif;
+    font-size: 8pt;
+    font-weight: 800;
+    margin-bottom: 3px;
+    color: #4b5563;
   }
   
   .ws-empty-box {
     width: 100%;
-    height: 140px; /* Space for drawing model */
-    border: 1px solid #666666;
-    border-radius: 4px;
-    background: #ffffff !important;
+    height: 115px; /* Compact height to fit exactly on single page */
+    border: 2px dashed #a5b4fc;
+    border-radius: 6px;
+    background: #fafafa !important;
     position: relative;
   }
   
-  /* Decorative Grid in working area for kids modeling (helps with math boxes) */
+  /* Decorative Grid in working area for kids modeling */
   .ws-empty-box::before {
     content: '';
     position: absolute;
@@ -2867,20 +2893,19 @@ h1, h2, h3, h4, h5, h6, .hero-title, .about-title, .logo {
     width: 100%;
     height: 100%;
     background-image: 
-      linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
-    background-size: 20px 20px;
+      linear-gradient(rgba(99, 102, 241, 0.05) 1.5px, transparent 1.5px),
+      linear-gradient(90deg, rgba(99, 102, 241, 0.05) 1.5px, transparent 1.5px);
+    background-size: 18px 18px;
     pointer-events: none;
   }
   
   .ws-print-footer {
-    border-top: 1px solid #000000;
-    margin-top: 30px;
+    border-top: 2px solid #e2e8f0;
+    margin-top: 15px;
     padding-top: 6px;
     text-align: center;
     font-size: 7.5pt;
-    color: #555555 !important;
-    font-family: sans-serif;
+    color: #64748b !important;
   }
 }
 
