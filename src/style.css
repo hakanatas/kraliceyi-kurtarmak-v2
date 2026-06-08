@@ -2883,3 +2883,34 @@ h1, h2, h3, h4, h5, h6, .hero-title, .about-title, .logo {
     font-family: sans-serif;
   }
 }
+
+/* Height-based media query for compact layout on standard displays to prevent unnecessary modal scrolling */
+@media (max-height: 850px) {
+  .puzzle-panel {
+    padding: var(--space-md) var(--space-lg);
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+  }
+  .dialogue-box {
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-sm);
+  }
+  .question-card {
+    margin-bottom: var(--space-sm);
+  }
+  .vis-workarea {
+    min-height: 200px;
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-sm);
+  }
+  .submission-bar {
+    padding: var(--space-sm) var(--space-md);
+  }
+  .char-avatar {
+    font-size: 2.2rem;
+  }
+  .modal-tabs {
+    margin-bottom: var(--space-sm);
+  }
+}
+
