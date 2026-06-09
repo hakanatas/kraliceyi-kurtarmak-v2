@@ -2,6 +2,7 @@
 // 2 Tasks per gate (Total 10 tasks) - Answers are hidden from pre-solve visualizations
 // Includes speechCorrect dynamic dialogue feedback objects
 import { playClick } from './audio.js';
+import { uiTranslations } from './translations.js';
 import gsap from 'gsap';
 
 export const puzzles = [
@@ -40,10 +41,11 @@ export const puzzles = [
           name: "Aleks",
           text: "Harika! Birinci sayı makinesinin kuralını zihnimizle çözüp kalemin gücünü taklit ettik. Ama durun, Recher ikinci bir makineyi daha kilitledi!"
         },
-        renderVisualizer: (container) => {
+        renderVisualizer: (container, lang = 'tr') => {
+          const t = uiTranslations[lang];
           container.innerHTML = `
             <div class="vis-reverse">
-              <p class="vis-instruction">Aşağıdaki boru hattında işlemleri ileri ve geri yönde simüle et:</p>
+              <p class="vis-instruction">${t["vis-reverse-instruction"]}</p>
               <div class="pipeline">
                 <div class="pipe-node" id="node-start">?</div>
                 <div class="pipe-link font-accent">× 3</div>
@@ -52,10 +54,10 @@ export const puzzles = [
                 <div class="pipe-node pipe-node--active">26</div>
               </div>
               <div class="vis-actions">
-                <button class="btn btn--secondary" id="btn-reverse">Geriye Doğru Çalış (Ters İşlem)</button>
-                <button class="btn btn--secondary" id="btn-forward" style="display:none;">İleriye Doğru Çalış</button>
+                <button class="btn btn--secondary" id="btn-reverse">${t["vis-reverse-btn-reverse"]}</button>
+                <button class="btn btn--secondary" id="btn-forward" style="display:none;">${t["vis-reverse-btn-forward"]}</button>
               </div>
-              <div class="pipeline-explain" id="pipe-explain">İşlemleri tersine çevirmek ve geriye doğru akışı görmek için yukarıdaki butona tıkla!</div>
+              <div class="pipeline-explain" id="pipe-explain">${t["vis-reverse-explain-default"]}</div>
             </div>
           `;
 
@@ -73,12 +75,11 @@ export const puzzles = [
             nodeMid.classList.add('pipe-node--active');
             nodeStart.textContent = "?";
             nodeStart.classList.add('pipe-node--highlight');
-            pipeExplain.innerHTML = `
-              <strong>Ters Akış Aktif:</strong><br>
-              1. Sonuçtan 5 çıkar: <span class="text-accent">26 - 5 = [Ortadaki Sayı]</span><br>
-              2. Bulduğun ortadaki sayıyı 3'e böl: <span class="text-accent">[Ortadaki Sayı] / 3 = [Başlangıç Sayısı]</span><br>
-              Hesaplamaları yapıp cevabını aşağıya gir!
-            `;
+            pipeExplain.innerHTML = t["vis-reverse-explain-active"]
+              .replace("{val1}", "5")
+              .replace("{eq1}", "26 - 5")
+              .replace("{val2}", "3")
+              .replace("{op}", "÷");
             btnReverse.style.display = 'none';
             btnForward.style.display = 'inline-block';
           });
@@ -90,7 +91,7 @@ export const puzzles = [
             nodeStart.classList.remove('pipe-node--highlight');
             nodeMid.textContent = "?";
             nodeMid.classList.remove('pipe-node--active');
-            pipeExplain.textContent = "İşlemleri tersine çevirmek ve geriye doğru akışı görmek için yukarıdaki butona tıkla!";
+            pipeExplain.textContent = t["vis-reverse-explain-default"];
             btnForward.style.display = 'none';
             btnReverse.style.display = 'inline-block';
           });
@@ -106,10 +107,11 @@ export const puzzles = [
           name: "Kral Recher",
           text: "Hayır! Olamaz! İlk zindan kapısının kilidini açtınız... Ama sevinmeyin, önünüzdeki lav nehrini ve sihirli köprü örüntülerini asla geçemeyeceksiniz!"
         },
-        renderVisualizer: (container) => {
+        renderVisualizer: (container, lang = 'tr') => {
+          const t = uiTranslations[lang];
           container.innerHTML = `
             <div class="vis-reverse">
-              <p class="vis-instruction">İkinci makineyi incele ve ters akışı başlat:</p>
+              <p class="vis-instruction">${t["vis-reverse-instruction"]}</p>
               <div class="pipeline">
                 <div class="pipe-node" id="node-start">?</div>
                 <div class="pipe-link font-accent">÷ 2</div>
@@ -118,10 +120,10 @@ export const puzzles = [
                 <div class="pipe-node pipe-node--active">15</div>
               </div>
               <div class="vis-actions">
-                <button class="btn btn--secondary" id="btn-reverse">Geriye Doğru Çalış (Ters İşlem)</button>
-                <button class="btn btn--secondary" id="btn-forward" style="display:none;">İleriye Doğru Çalış</button>
+                <button class="btn btn--secondary" id="btn-reverse">${t["vis-reverse-btn-reverse"]}</button>
+                <button class="btn btn--secondary" id="btn-forward" style="display:none;">${t["vis-reverse-btn-forward"]}</button>
               </div>
-              <div class="pipeline-explain" id="pipe-explain">Ters işlemleri görmek için yukarıdaki butona tıkla!</div>
+              <div class="pipeline-explain" id="pipe-explain">${t["vis-reverse-explain-default"]}</div>
             </div>
           `;
 
@@ -139,12 +141,11 @@ export const puzzles = [
             nodeMid.classList.add('pipe-node--active');
             nodeStart.textContent = "?";
             nodeStart.classList.add('pipe-node--highlight');
-            pipeExplain.innerHTML = `
-              <strong>Ters Akış Aktif:</strong><br>
-              1. Sonuçtan 8 çıkar: <span class="text-accent">15 - 8 = [Ortadaki Sayı]</span><br>
-              2. Bölmenin tersi çarpmadır, sonucu 2 ile çarp: <span class="text-accent">[Ortadaki Sayı] × 2 = [Başlangıç Sayısı]</span><br>
-              Zihninden hesaplayıp cevabını aşağıya yaz!
-            `;
+            pipeExplain.innerHTML = t["vis-reverse-explain-active"]
+              .replace("{val1}", "8")
+              .replace("{eq1}", "15 - 8")
+              .replace("{val2}", "2")
+              .replace("{op}", "×");
             btnReverse.style.display = 'none';
             btnForward.style.display = 'inline-block';
           });
@@ -156,7 +157,7 @@ export const puzzles = [
             nodeStart.classList.remove('pipe-node--highlight');
             nodeMid.textContent = "?";
             nodeMid.classList.remove('pipe-node--active');
-            pipeExplain.textContent = "Ters işlemleri görmek için yukarıdaki butona tıkla!";
+            pipeExplain.textContent = t["vis-reverse-explain-default"];
             btnForward.style.display = 'none';
             btnReverse.style.display = 'inline-block';
           });
@@ -199,10 +200,11 @@ export const puzzles = [
           name: "Vanessa",
           text: "Buldum! Sütunların aralarındaki farklar ikiye katlanıyor! Köprünün ilk yarısını birleştirdik, şimdi ikinci örüntüye geçelim!"
         },
-        renderVisualizer: (container) => {
+        renderVisualizer: (container, lang = 'tr') => {
+          const t = uiTranslations[lang];
           container.innerHTML = `
             <div class="vis-pattern">
-              <p class="vis-instruction">Sayıların arasındaki farkları görmek için soru işaretli yaylara tıkla:</p>
+              <p class="vis-instruction">${t["vis-pattern-instruction"]}</p>
               <div class="pattern-sequence">
                 <div class="seq-item"><div class="seq-block" style="height: 40px;">3</div></div>
                 <div class="seq-diff" id="diff-1">?</div>
@@ -216,16 +218,46 @@ export const puzzles = [
                 <div class="seq-diff seq-diff--glow" id="diff-5">?</div>
                 <div class="seq-item"><div class="seq-block seq-block--target" style="height: 190px;" id="seq-target">?</div></div>
               </div>
-              <div class="pattern-explain" id="pattern-explain">Sayılar arasındaki artışları görmek için yukarıdaki soru işaretlerine tıklayabilirsin.</div>
+              <div class="pattern-explain" id="pattern-explain">${t["vis-pattern-explain-default"]}</div>
             </div>
           `;
 
           const diffs = [
-            { el: container.querySelector('#diff-1'), val: "+4", text: "3'ten 7'ye: <span class='text-accent'>4 artış</span>." },
-            { el: container.querySelector('#diff-2'), val: "+8", text: "7'den 15'e: <span class='text-accent'>8 artış</span> (4'ün 2 katı)." },
-            { el: container.querySelector('#diff-3'), val: "+16", text: "15'ten 31'e: <span class='text-accent'>16 artış</span> (8'in 2 katı)." },
-            { el: container.querySelector('#diff-4'), val: "+32", text: "31'den 63'e: <span class='text-accent'>32 artış</span> (16'nın 2 katı)." },
-            { el: container.querySelector('#diff-5'), val: "?", text: "Farklar: 4, 8, 16, 32... Bir sonraki artış miktarı kaç olmalı? Bu artışı 63'e ekleyerek hedef sayıyı bul!" }
+            {
+              el: container.querySelector('#diff-1'),
+              val: "+4",
+              text: lang === 'en' ? "From 3 to 7: <span class='text-accent'>increase of 4</span>."
+                  : lang === 'ru' ? "От 3 до 7: <span class='text-accent'>прибавление 4</span>."
+                  : "3'ten 7'ye: <span class='text-accent'>4 artış</span>."
+            },
+            {
+              el: container.querySelector('#diff-2'),
+              val: "+8",
+              text: lang === 'en' ? "From 7 to 15: <span class='text-accent'>increase of 8</span> (2 times 4)."
+                  : lang === 'ru' ? "От 7 до 15: <span class='text-accent'>прибавление 8</span> (в 2 раза больше 4)."
+                  : "7'den 15'e: <span class='text-accent'>8 artış</span> (4'ün 2 katı)."
+            },
+            {
+              el: container.querySelector('#diff-3'),
+              val: "+16",
+              text: lang === 'en' ? "From 15 to 31: <span class='text-accent'>increase of 16</span> (2 times 8)."
+                  : lang === 'ru' ? "От 15 до 31: <span class='text-accent'>прибавление 16</span> (в 2 раза больше 8)."
+                  : "15'ten 31'e: <span class='text-accent'>16 artış</span> (8'in 2 katı)."
+            },
+            {
+              el: container.querySelector('#diff-4'),
+              val: "+32",
+              text: lang === 'en' ? "From 31 to 63: <span class='text-accent'>increase of 32</span> (2 times 16)."
+                  : lang === 'ru' ? "От 31 до 63: <span class='text-accent'>прибавление 32</span> (в 2 раза больше 16)."
+                  : "31'den 63'e: <span class='text-accent'>32 artış</span> (16'nın 2 katı)."
+            },
+            {
+              el: container.querySelector('#diff-5'),
+              val: "?",
+              text: lang === 'en' ? "Differences: 4, 8, 16, 32... What should be the next increase? Add this increase to 63 to find the target number!"
+                  : lang === 'ru' ? "Разности: 4, 8, 16, 32... Каким должно быть следующее прибавление? Прибавьте его к 63, чтобы найти искомое число!"
+                  : "Farklar: 4, 8, 16, 32... Bir sonraki artış miktarı kaç olmalı? Bu artışı 63'e ekleyerek hedef sayıyı bul!"
+            }
           ];
 
           const explain = container.querySelector('#pattern-explain');
@@ -237,7 +269,7 @@ export const puzzles = [
               if (diff.val !== "?") {
                 diff.el.classList.add('seq-diff--active');
               }
-              explain.innerHTML = `<strong>Örüntü Analizi:</strong> ${diff.text}`;
+              explain.innerHTML = t["vis-pattern-explain-step"].replace("{text}", diff.text);
               
               if (index === 4) {
                 diff.el.textContent = "+64";
@@ -257,10 +289,11 @@ export const puzzles = [
           name: "Kral Recher",
           text: "Nasıl olur?! Lav köprüsünü birleştirdiniz ve karşıya geçtiniz... Ama Zümrüt Kulesi'nin gizemli kesir koruyucuları sizi kulenin tepesinde durduracak!"
         },
-        renderVisualizer: (container) => {
+        renderVisualizer: (container, lang = 'tr') => {
+          const t = uiTranslations[lang];
           container.innerHTML = `
             <div class="vis-pattern">
-              <p class="vis-instruction">Sayılar arasındaki çarpım ilişkilerini görmek için yaylara tıkla:</p>
+              <p class="vis-instruction">${t["vis-pattern-instruction"]}</p>
               <div class="pattern-sequence">
                 <div class="seq-item"><div class="seq-block" style="height: 40px;">2</div></div>
                 <div class="seq-diff" id="diff-1">?</div>
@@ -272,15 +305,39 @@ export const puzzles = [
                 <div class="seq-diff seq-diff--glow" id="diff-4">?</div>
                 <div class="seq-item"><div class="seq-block seq-block--target" style="height: 190px;" id="seq-target">?</div></div>
               </div>
-              <div class="pattern-explain" id="pattern-explain">Kat ilişkilerini görmek için yukarıdaki soru işaretlerine tıkla.</div>
+              <div class="pattern-explain" id="pattern-explain">${t["vis-pattern-explain-default"]}</div>
             </div>
           `;
 
           const diffs = [
-            { el: container.querySelector('#diff-1'), val: "×3", text: "2'den 6'ya: <span class='text-accent'>3 katı</span>." },
-            { el: container.querySelector('#diff-2'), val: "×3", text: "6'dan 18'e: <span class='text-accent'>3 katı</span>." },
-            { el: container.querySelector('#diff-3'), val: "×3", text: "18'den 54'e: <span class='text-accent'>3 katı</span>." },
-            { el: container.querySelector('#diff-4'), val: "?", text: "Sayılar sürekli 3 katına çıkıyor. Son adımda hedefi bulmak için 54'ü kaçla çarpmalısın? Çarpımı hesaplayıp gir!" }
+            {
+              el: container.querySelector('#diff-1'),
+              val: "×3",
+              text: lang === 'en' ? "From 2 to 6: <span class='text-accent'>3 times</span>."
+                  : lang === 'ru' ? "От 2 до 6: <span class='text-accent'>в 3 раза</span>."
+                  : "2'den 6'ya: <span class='text-accent'>3 katı</span>."
+            },
+            {
+              el: container.querySelector('#diff-2'),
+              val: "×3",
+              text: lang === 'en' ? "From 6 to 18: <span class='text-accent'>3 times</span>."
+                  : lang === 'ru' ? "От 6 до 18: <span class='text-accent'>в 3 раза</span>."
+                  : "6'dan 18'e: <span class='text-accent'>3 katı</span>."
+            },
+            {
+              el: container.querySelector('#diff-3'),
+              val: "×3",
+              text: lang === 'en' ? "From 18 to 54: <span class='text-accent'>3 times</span>."
+                  : lang === 'ru' ? "От 18 до 54: <span class='text-accent'>в 3 раза</span>."
+                  : "18'den 54'e: <span class='text-accent'>3 katı</span>."
+            },
+            {
+              el: container.querySelector('#diff-4'),
+              val: "?",
+              text: lang === 'en' ? "Numbers are constantly multiplied by 3. What should you multiply 54 by in the final step to find the target? Calculate the product!"
+                  : lang === 'ru' ? "Числа постоянно умножаются на 3. На сколько нужно умножить 54 на последнем шаге, чтобы найти цель? Вычислите произведение!"
+                  : "Sayılar sürekli 3 katına çıkıyor. Son adımda hedefi bulmak için 54'ü kaçla çarpmalısın? Çarpımı hesaplayıp gir!"
+            }
           ];
 
           const explain = container.querySelector('#pattern-explain');
@@ -292,7 +349,7 @@ export const puzzles = [
                 diff.el.textContent = diff.val;
                 diff.el.classList.add('seq-diff--active');
               }
-              explain.innerHTML = `<strong>Örüntü Analizi:</strong> ${diff.text}`;
+              explain.innerHTML = t["vis-pattern-explain-step"].replace("{text}", diff.text);
               
               if (index === 3) {
                 diff.el.textContent = "×3";
@@ -339,17 +396,18 @@ export const puzzles = [
           name: "Sam",
           text: "Harika! Çizdiğimiz kutu modeli sayesinde Vanessa ve benim paylarımı düşüp bütünü kurduk. Ama alevler ikinci bir kesir bilmecesi daha gösteriyor!"
         },
-        renderVisualizer: (container) => {
+        renderVisualizer: (container, lang = 'tr') => {
+          const t = uiTranslations[lang];
           container.innerHTML = `
             <div class="vis-fraction">
-              <p class="vis-instruction">Zümrüt kutusunu görselleştirmek için adımları çalıştır:</p>
+              <p class="vis-instruction">${t["vis-fraction-instruction"]}</p>
               <div class="fraction-bar" id="fraction-bar"></div>
               <div class="vis-actions" style="margin-top: 1rem;">
-                <button class="btn btn--secondary" id="btn-frac-1">1. Adım: Vanessa'nın Payı (1/3)</button>
-                <button class="btn btn--secondary" id="btn-frac-2" style="display:none;">2. Adım: Sam'in Payı (Kalanın 1/4'ü)</button>
-                <button class="btn btn--secondary" id="btn-frac-3" style="display:none;">3. Adım: Geriye Kalanlar (6 Zümrüt)</button>
+                <button class="btn btn--secondary" id="btn-frac-1">${t["vis-fraction-btn-1"]} (1/3)</button>
+                <button class="btn btn--secondary" id="btn-frac-2" style="display:none;">${t["vis-fraction-btn-2"]} (${lang === 'en' ? '1/4 of Remaining' : lang === 'ru' ? '1/4 от остатка' : 'Kalanın 1/4\'ü'})</button>
+                <button class="btn btn--secondary" id="btn-frac-3" style="display:none;">${t["vis-fraction-btn-3"]} (6 ${lang === 'en' ? 'Emeralds' : lang === 'ru' ? 'Изумрудов' : 'Zümrüt'})</button>
               </div>
-              <div class="fraction-explain" id="fraction-explain">Vanessa'nın payını renklendirmek için 1. Adım butonuna tıkla.</div>
+              <div class="fraction-explain" id="fraction-explain">${t["vis-fraction-explain-default"]}</div>
             </div>
           `;
 
@@ -373,9 +431,9 @@ export const puzzles = [
               blocks[i].classList.add('fraction-block--vanessa');
               blocks[i].innerHTML = `V`;
             }
-            explain.innerHTML = `
-              <strong>Vanessa'nın Payı:</strong> Toplam 12 parçanın $1/3$'ü ($12 / 3 = 4$ parça) Vanessa'ya boyandı. Geriye boyanmamış <span class="text-accent">8 parça</span> kaldı.
-            `;
+            explain.innerHTML = lang === 'en' ? `<strong>Vanessa's Share:</strong> 1/3 of the total 12 shares ($12 / 3 = 4$ shares) colored for Vanessa. Remaining uncolored: <span class="text-accent">8 shares</span>.`
+                              : lang === 'ru' ? `<strong>Доля Ванессы:</strong> 1/3 от общего количества 12 долей ($12 / 3 = 4$ доли) раскрашено для Ванессы. Осталось нераскрашенными: <span class="text-accent">8 долей</span>.`
+                              : `<strong>Vanessa'ın Payı:</strong> Toplam 12 parçanın $1/3$'ü ($12 / 3 = 4$ parça) Vanessa'ya boyandı. Geriye boyanmamış <span class="text-accent">8 parça</span> kaldı.`;
             btn1.style.display = 'none';
             btn2.style.display = 'inline-block';
           });
@@ -385,9 +443,9 @@ export const puzzles = [
             const blocks = bar.querySelectorAll('.fraction-block');
             blocks[4].classList.add('fraction-block--sam'); blocks[4].innerHTML = `S`;
             blocks[5].classList.add('fraction-block--sam'); blocks[5].innerHTML = `S`;
-            explain.innerHTML = `
-              <strong>Sam'in Payı:</strong> Kalan 8 parçanın $1/4$'ü ($8 / 4 = 2$ parça) Sam'e boyandı. Geriye boyanmamış <span class="text-accent">6 parça</span> kaldı.
-            `;
+            explain.innerHTML = lang === 'en' ? `<strong>Sam's Share:</strong> 1/4 of the remaining 8 shares ($8 / 4 = 2$ shares) colored for Sam. Remaining uncolored: <span class="text-accent">6 shares</span>.`
+                              : lang === 'ru' ? `<strong>Доля Сэма:</strong> 1/4 от оставшихся 8 долей ($8 / 4 = 2$ доли) раскрашено для Сэма. Осталось нераскрашенными: <span class="text-accent">6 долей</span>.`
+                              : `<strong>Sam'in Payı:</strong> Kalan 8 parçanın $1/4$'ü ($8 / 4 = 2$ parça) Sam'e boyandı. Geriye boyanmamış <span class="text-accent">6 parça</span> kaldı.`;
             btn2.style.display = 'none';
             btn3.style.display = 'inline-block';
           });
@@ -399,10 +457,9 @@ export const puzzles = [
               blocks[i].classList.add('fraction-block--emerald');
               blocks[i].innerHTML = `💎`;
             }
-            explain.innerHTML = `
-              <strong>Kalan Zümrütler:</strong> Geriye kalan 6 parçanın toplam değeri 6 zümrüte eşit olarak verilmiştir. <br>
-              Buna göre 1 adet kutunun kaç zümrüte karşılık geldiğini bulup, toplam 12 kutunun kaç zümrüt edeceğini hesapla!
-            `;
+            explain.innerHTML = lang === 'en' ? `<strong>Remaining Emeralds:</strong> The value of the remaining 6 shares is given as 6 emeralds.<br>Calculate the value of 1 share, then find the total value of 12 shares!`
+                              : lang === 'ru' ? `<strong>Оставшиеся изумруды:</strong> Значение оставшихся 6 долей равно 6 изумрудам.<br>Найдите значение 1 доли, затем вычислите общее значение для 12 долей!`
+                              : `<strong>Kalan Zümrütler:</strong> Geriye kalan 6 parçanın toplam değeri 6 zümrüte eşit olarak verilmiştir. <br>Buna göre 1 adet kutunun kaç zümrüte karşılık geldiğini bulup, toplam 12 kutunun kaç zümrüt edeceğini hesapla!`;
             btn3.style.display = 'none';
           });
         }
@@ -417,17 +474,18 @@ export const puzzles = [
           name: "Kral Recher",
           text: "Kuleyi de mi aştınız?! İnanılmaz! Ama muhafız kışlasındaki baş muhafızımın terazi yaş katı bilmecesini çözmeniz mümkün değil!"
         },
-        renderVisualizer: (container) => {
+        renderVisualizer: (container, lang = 'tr') => {
+          const t = uiTranslations[lang];
           container.innerHTML = `
             <div class="vis-fraction">
-              <p class="vis-instruction">İkinci kesir problemini kutularla simüle et:</p>
+              <p class="vis-instruction">${t["vis-fraction-instruction"]}</p>
               <div class="fraction-bar" id="fraction-bar"></div>
               <div class="vis-actions" style="margin-top: 1rem;">
-                <button class="btn btn--secondary" id="btn-frac-1">1. Adım: Vanessa'nın Payı (1/2)</button>
-                <button class="btn btn--secondary" id="btn-frac-2" style="display:none;">2. Adım: Sam'in Payı (Kalanın 1/3'ü)</button>
-                <button class="btn btn--secondary" id="btn-frac-3" style="display:none;">3. Adım: Geriye Kalanlar (4 Zümrüt)</button>
+                <button class="btn btn--secondary" id="btn-frac-1">${t["vis-fraction-btn-1"]} (1/2)</button>
+                <button class="btn btn--secondary" id="btn-frac-2" style="display:none;">${t["vis-fraction-btn-2"]} (${lang === 'en' ? '1/3 of Remaining' : lang === 'ru' ? '1/3 от остатка' : 'Kalanın 1/3\'ü'})</button>
+                <button class="btn btn--secondary" id="btn-frac-3" style="display:none;">${t["vis-fraction-btn-3"]} (4 ${lang === 'en' ? 'Emeralds' : lang === 'ru' ? 'Изумрудов' : 'Zümrüt'})</button>
               </div>
-              <div class="fraction-explain" id="fraction-explain">Vanessa'nın payını renklendirmek için 1. Adım butonuna tıkla.</div>
+              <div class="fraction-explain" id="fraction-explain">${t["vis-fraction-explain-default"]}</div>
             </div>
           `;
 
@@ -451,9 +509,9 @@ export const puzzles = [
               blocks[i].classList.add('fraction-block--vanessa');
               blocks[i].innerHTML = `V`;
             }
-            explain.innerHTML = `
-              <strong>Vanessa'nın Payı:</strong> Toplam 12 parçanın yarıya bölünmüş hali ($12 / 2 = 6$ parça) Vanessa'ya verildi. Geriye boyanmamış <span class="text-accent">6 parça</span> kaldı.
-            `;
+            explain.innerHTML = lang === 'en' ? `<strong>Vanessa's Share:</strong> Half of the total 12 shares ($12 / 2 = 6$ shares) colored for Vanessa. Remaining uncolored: <span class="text-accent">6 shares</span>.`
+                              : lang === 'ru' ? `<strong>Доля Ванессы:</strong> Половина от общего количества 12 долей ($12 / 2 = 6$ долей) раскрашено для Ванессы. Осталось нераскрашенными: <span class="text-accent">6 долей</span>.`
+                              : `<strong>Vanessa'ın Payı:</strong> Toplam 12 parçanın yarıya bölünmüş hali ($12 / 2 = 6$ parça) Vanessa'ya verildi. Geriye boyanmamış <span class="text-accent">6 parça</span> kaldı.`;
             btn1.style.display = 'none';
             btn2.style.display = 'inline-block';
           });
@@ -463,9 +521,9 @@ export const puzzles = [
             const blocks = bar.querySelectorAll('.fraction-block');
             blocks[6].classList.add('fraction-block--sam'); blocks[6].innerHTML = `S`;
             blocks[7].classList.add('fraction-block--sam'); blocks[7].innerHTML = `S`;
-            explain.innerHTML = `
-              <strong>Sam'in Payı:</strong> Kalan 6 parçanın $1/3$'ü ($6 / 3 = 2$ parça) Sam'e boyandı. Geriye boyanmamış <span class="text-accent">4 parça</span> kaldı.
-            `;
+            explain.innerHTML = lang === 'en' ? `<strong>Sam's Share:</strong> 1/3 of the remaining 6 shares ($6 / 3 = 2$ shares) colored for Sam. Remaining uncolored: <span class="text-accent">4 shares</span>.`
+                              : lang === 'ru' ? `<strong>Доля Сэма:</strong> 1/3 от оставшихся 6 долей ($6 / 3 = 2$ доли) раскрашено для Сэма. Осталось нераскрашенными: <span class="text-accent">4 доли</span>.`
+                              : `<strong>Sam'in Payı:</strong> Kalan 6 parçanın $1/3$'ü ($6 / 3 = 2$ parça) Sam'e boyandı. Geriye boyanmamış <span class="text-accent">4 parça</span> kaldı.`;
             btn2.style.display = 'none';
             btn3.style.display = 'inline-block';
           });
@@ -477,10 +535,9 @@ export const puzzles = [
               blocks[i].classList.add('fraction-block--emerald');
               blocks[i].innerHTML = `💎`;
             }
-            explain.innerHTML = `
-              <strong>Kalan Zümrütler:</strong> Geriye kalan 4 kutunun değeri soruda 4 zümrüt olarak belirtilmiştir. <br>
-              Buna göre 1 kutunun değerini bulup, torbadaki toplam 12 kutunun karşılığını hesapla!
-            `;
+            explain.innerHTML = lang === 'en' ? `<strong>Remaining Emeralds:</strong> The value of the remaining 4 shares is given as 4 emeralds.<br>Calculate the value of 1 share, then find the total value of 12 shares!`
+                              : lang === 'ru' ? `<strong>Оставшиеся изумруды:</strong> Значение оставшихся 4 долей равно 4 изумрудам.<br>Найдите значение 1 доли, затем вычислите общее значение для 12 долей!`
+                              : `<strong>Kalan Zümrütler:</strong> Geriye kalan 4 kutunun değeri soruda 4 zümrüt olarak belirtilmiştir. <br>Buna göre 1 kutunun değerini bulup, torbadaki toplam 12 kutunun karşılığını hesapla!`;
             btn3.style.display = 'none';
           });
         }
@@ -522,15 +579,16 @@ export const puzzles = [
           name: "Aleks",
           text: "Teraziyi dengeleyerek genç muhafızın yaşını bulduk ve baş muhafızın yaşını hesapladık! Nöbetçilerden biri çekildi ama diğeri hala yolu kapatıyor!"
         },
-        renderVisualizer: (container) => {
+        renderVisualizer: (container, lang = 'tr') => {
+          const t = uiTranslations[lang];
           container.innerHTML = `
             <div class="vis-scale">
-              <p class="vis-instruction">Genç muhafızın yaşını (kutu değerini) sürgüyle kaydırarak teraziyi dengeye getir:</p>
+              <p class="vis-instruction">${t["vis-scale-instruction"]}</p>
               
               <div class="scale-container">
                 <div class="scale-beam" id="scale-beam">
                   <div class="scale-pan scale-pan--left" id="pan-left">
-                    <div class="pan-contents" id="left-contents"></div>
+                     <div class="pan-contents" id="left-contents"></div>
                   </div>
                   <div class="scale-pan scale-pan--right" id="pan-right">
                     <div class="pan-contents">
@@ -542,15 +600,15 @@ export const puzzles = [
               </div>
               
               <div class="scale-control">
-                <label for="scale-slider">Genç Muhafızın Yaşı (<span class="text-gold" style="font-weight:bold;" id="slider-val">10</span>):</label>
+                <label for="scale-slider">${t["vis-scale-slider-label"]} (<span class="text-gold" style="font-weight:bold;" id="slider-val">10</span>):</label>
                 <input type="range" id="scale-slider" min="5" max="20" value="10" step="1" style="width:100%; max-width: 300px;">
               </div>
               
-              <div class="scale-explain" id="scale-explain">Terazi şu an dengede değil. Genç muhafızın yaşını değiştirerek toplam ağırlığı 48 yap!</div>
+              <div class="scale-explain" id="scale-explain">${t["vis-scale-explain-default"]}</div>
             </div>
           `;
 
-          const slider = container.querySelector('#scale-slider');
+          const slider = slider || container.querySelector('#scale-slider');
           const sliderVal = container.querySelector('#slider-val');
           const beam = container.querySelector('#scale-beam');
           const leftContents = container.querySelector('#left-contents');
@@ -561,8 +619,8 @@ export const puzzles = [
             sliderVal.textContent = val;
             
             leftContents.innerHTML = `
-              <div class="pan-row"><span class="block-lbl">Genç M. (1 Kat):</span> <div class="scale-box scale-box--young">${val}</div></div>
-              <div class="pan-row"><span class="block-lbl">Baş M. (3 Kat):</span> 
+              <div class="pan-row"><span class="block-lbl">${t["vis-scale-young-label"]}</span> <div class="scale-box scale-box--young">${val}</div></div>
+              <div class="pan-row"><span class="block-lbl">${t["vis-scale-lead-label"].replace("{factor}", "3")}</span> 
                 <div class="scale-box scale-box--lead">${val}</div>
                 <div class="scale-box scale-box--lead">${val}</div>
                 <div class="scale-box scale-box--lead">${val}</div>
@@ -586,18 +644,14 @@ export const puzzles = [
 
             if (totalLeft === targetRight) {
               beam.classList.add('scale-beam--balanced');
-              explain.innerHTML = `
-                <span class="text-emerald" style="font-weight:bold;">Terazi Dengede!</span><br>
-                Genç muhafızın yaşı (1 Kat) = <span class="text-gold">12</span> bulundu.<br>
-                Baş muhafızın yaşı ise bunun <span class="text-gold">3 katı (3 Kat)</span> olduğuna göre, baş muhafızın yaşını hesapla!
-              `;
+              explain.innerHTML = t["vis-scale-explain-balanced"].replace("{age}", "12").replace("{factor}", "3");
             } else {
               beam.classList.remove('scale-beam--balanced');
-              const status = diff > 0 ? "Ağır Geldi" : "Hafif Geldi";
-              explain.innerHTML = `
-                Sol Taraf Toplamı: <span class="text-accent">${totalLeft}</span> (Hedef: 48). Sol Taraf <strong>${status}</strong>.<br>
-                Dengeyi bulmak için kaydırıcıyı oynat!
-              `;
+              const status = diff > 0 ? (lang === 'en' ? "Heavy" : lang === 'ru' ? "Перевес" : "Ağır Geldi")
+                                      : (lang === 'en' ? "Light" : lang === 'ru' ? "Недовес" : "Hafif Geldi");
+              explain.innerHTML = lang === 'en' ? `Left Side Total: <span class="text-accent">${totalLeft}</span> (Target: 48). Left Side is <strong>${status}</strong>.<br>Move the slider to balance!`
+                                : lang === 'ru' ? `Слева всего: <span class="text-accent">${totalLeft}</span> (Цель: 48). Слева <strong>${status}</strong>.<br>Переместите ползунок для баланса!`
+                                : `Sol Taraf Toplamı: <span class="text-accent">${totalLeft}</span> (Hedef: 48). Sol Taraf <strong>${status}</strong>.<br>Dengeyi bulmak için kaydırıcıyı oynat!`;
             }
           }
 
@@ -619,10 +673,11 @@ export const puzzles = [
           name: "Kral Recher",
           text: "Kışla kapısı da mı açıldı?! Lanet olsun! Ama Kraliçenin hücresindeki yalan/doğru sandık kilidini asla çözemeyeceksiniz. O sandıklardan sadece biri doğru!"
         },
-        renderVisualizer: (container) => {
+        renderVisualizer: (container, lang = 'tr') => {
+          const t = uiTranslations[lang];
           container.innerHTML = `
             <div class="vis-scale">
-              <p class="vis-instruction">Genç muhafızın yaşını (kutu değerini) kaydırarak toplam ağırlığı 45 yap:</p>
+              <p class="vis-instruction">${t["vis-scale-instruction"]}</p>
               
               <div class="scale-container">
                 <div class="scale-beam" id="scale-beam">
@@ -639,11 +694,11 @@ export const puzzles = [
               </div>
               
               <div class="scale-control">
-                <label for="scale-slider">Genç Muhafızın Yaşı (<span class="text-gold" style="font-weight:bold;" id="slider-val">10</span>):</label>
+                <label for="scale-slider">${t["vis-scale-slider-label"]} (<span class="text-gold" style="font-weight:bold;" id="slider-val">10</span>):</label>
                 <input type="range" id="scale-slider" min="5" max="25" value="10" step="1" style="width:100%; max-width: 300px;">
               </div>
               
-              <div class="scale-explain">Terazi şu an dengede değil. Sürgüyü oynatarak dengeyi kur!</div>
+              <div class="scale-explain" id="scale-explain">${t["vis-scale-explain-default"]}</div>
             </div>
           `;
 
@@ -651,15 +706,15 @@ export const puzzles = [
           const sliderVal = container.querySelector('#slider-val');
           const beam = container.querySelector('#scale-beam');
           const leftContents = container.querySelector('#left-contents');
-          const explain = container.querySelector('.scale-explain');
+          const explain = container.querySelector('#scale-explain');
 
           function updateScale() {
             const val = parseInt(slider.value);
             sliderVal.textContent = val;
             
             leftContents.innerHTML = `
-              <div class="pan-row"><span class="block-lbl">Genç M. (1 Kat):</span> <div class="scale-box scale-box--young">${val}</div></div>
-              <div class="pan-row"><span class="block-lbl">Baş M. (2 Kat):</span> 
+              <div class="pan-row"><span class="block-lbl">${t["vis-scale-young-label"]}</span> <div class="scale-box scale-box--young">${val}</div></div>
+              <div class="pan-row"><span class="block-lbl">${t["vis-scale-lead-label"].replace("{factor}", "2")}</span> 
                 <div class="scale-box scale-box--lead">${val}</div>
                 <div class="scale-box scale-box--lead">${val}</div>
               </div>
@@ -682,18 +737,14 @@ export const puzzles = [
 
             if (totalLeft === targetRight) {
               beam.classList.add('scale-beam--balanced');
-              explain.innerHTML = `
-                <span class="text-emerald" style="font-weight:bold;">Terazi Dengede!</span><br>
-                Genç muhafızın yaşı (1 Kat) = <span class="text-gold">15</span> bulundu.<br>
-                Baş muhafızın yaşı ise bunun <span class="text-gold">2 katı (2 Kat)</span> olduğuna göre, baş muhafızın yaşını hesapla!
-              `;
+              explain.innerHTML = t["vis-scale-explain-balanced"].replace("{age}", "15").replace("{factor}", "2");
             } else {
               beam.classList.remove('scale-beam--balanced');
-              const status = diff > 0 ? "Ağır Geldi" : "Hafif Geldi";
-              explain.innerHTML = `
-                Sol Taraf Toplamı: <span class="text-accent">${totalLeft}</span> (Hedef: 45). Sol Taraf <strong>${status}</strong>.<br>
-                Dengeyi bulmak için kaydırıcıyı oynat!
-              `;
+              const status = diff > 0 ? (lang === 'en' ? "Heavy" : lang === 'ru' ? "Перевес" : "Ağır Geldi")
+                                      : (lang === 'en' ? "Light" : lang === 'ru' ? "Недовес" : "Hafif Geldi");
+              explain.innerHTML = lang === 'en' ? `Left Side Total: <span class="text-accent">${totalLeft}</span> (Target: 45). Left Side is <strong>${status}</strong>.<br>Move the slider to balance!`
+                                : lang === 'ru' ? `Слева всего: <span class="text-accent">${totalLeft}</span> (Цель: 45). Слева <strong>${status}</strong>.<br>Переместите ползунок для баланса!`
+                                : `Sol Taraf Toplamı: <span class="text-accent">${totalLeft}</span> (Hedef: 45). Sol Taraf <strong>${status}</strong>.<br>Dengeyi bulmak için kaydırıcıyı oynat!`;
             }
           }
 
@@ -742,22 +793,23 @@ export const puzzles = [
           name: "Sam",
           text: "Harika! Hızları birleştirip zamanla çarparak kanyonun genişliğini bulduk ve kamyonların karşılaşmasını simüle ettik. Şimdi kanyon köprüsünden geçebiliriz!"
         },
-        renderVisualizer: (container) => {
+        renderVisualizer: (container, lang = 'tr') => {
+          const t = uiTranslations[lang];
           container.innerHTML = `
             <div class="vis-speed">
-              <p class="vis-instruction">Kamyonların hareketini görmek için 'Kamyonları Çalıştır' butonuna tıkla:</p>
+              <p class="vis-instruction">${t["vis-speed-instruction"]}</p>
               <div class="speed-road">
-                <div class="speed-flag speed-flag--left">A Kalesi</div>
-                <div class="speed-truck speed-truck--left" id="truck-l">🚚<span class="truck-label">45 km/sa</span></div>
-                <div class="speed-truck speed-truck--right" id="truck-r">🚛<span class="truck-label">54 km/sa</span></div>
-                <div class="speed-flag speed-flag--right">B Kalesi</div>
-                <div class="meeting-point" id="meet-point" style="display:none;">💥 Karşılaşma Noktası (20. Dakika)</div>
+                <div class="speed-flag speed-flag--left">${lang === 'en' ? 'Castle A' : lang === 'ru' ? 'Замок A' : 'A Kalesi'}</div>
+                <div class="speed-truck speed-truck--left" id="truck-l">🚚<span class="truck-label">45 ${lang === 'en' ? 'km/h' : lang === 'ru' ? 'км/ч' : 'km/sa'}</span></div>
+                <div class="speed-truck speed-truck--right" id="truck-r">🚛<span class="truck-label">54 ${lang === 'en' ? 'km/h' : lang === 'ru' ? 'км/ч' : 'km/sa'}</span></div>
+                <div class="speed-flag speed-flag--right">${lang === 'en' ? 'Castle B' : lang === 'ru' ? 'Замок B' : 'B Kalesi'}</div>
+                <div class="meeting-point" id="meet-point" style="display:none;">${t["vis-speed-meeting"]} (${lang === 'en' ? '20th Minute' : lang === 'ru' ? '20-я минута' : '20. Dakika'})</div>
               </div>
               <div class="vis-actions" style="margin-top: 1.5rem;">
-                <button class="btn btn--secondary" id="btn-run-trucks">Kamyonları Çalıştır 🏁</button>
-                <button class="btn btn--secondary" id="btn-reset-trucks" style="display:none;">Sıfırla 🔄</button>
+                <button class="btn btn--secondary" id="btn-run-trucks">${t["vis-speed-btn-run"]}</button>
+                <button class="btn btn--secondary" id="btn-reset-trucks" style="display:none;">${t["vis-speed-btn-reset"]}</button>
               </div>
-              <div class="speed-explain" id="speed-explain">Kamyonları yola çıkarmak için butona tıkla!</div>
+              <div class="speed-explain" id="speed-explain">${t["vis-speed-explain-default"]}</div>
             </div>
           `;
 
@@ -777,13 +829,13 @@ export const puzzles = [
             gsap.to(truckR, { right: '53%', duration: 2, ease: 'power1.inOut', onComplete: () => {
               meetPoint.style.display = 'block';
               gsap.fromTo(meetPoint, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(1.7)' });
-              explain.innerHTML = `
-                <strong>Karşılaşma Analizi:</strong><br>
-                - Kamyonlar birbirine doğru hareket ettiği için saatteki yaklaşma hızları: <span class="text-accent">45 + 54 = 99 km</span>'dir.<br>
-                - 20 dakika karşılaşma süresi, 1 saatin 3'te biridir (20/60 = 1/3 saat).<br>
-                - Toplam yol: 99 × (1/3) = <span class="text-emerald" style="font-weight:bold;">33 km</span>.<br>
-                Cevabı hesaplayıp aşağıdaki kutuya girin!
-              `;
+              explain.innerHTML = t["vis-speed-explain-active"]
+                .replace("{v1}", "45")
+                .replace("{v2}", "54")
+                .replace("{vsum}", "99")
+                .replace("{min}", lang === 'en' ? "20" : lang === 'ru' ? "20" : "20")
+                .replace("{frac}", "1/3")
+                .replace("{ans}", "33");
             } });
           });
 
@@ -794,7 +846,7 @@ export const puzzles = [
             meetPoint.style.display = 'none';
             gsap.set(truckL, { left: '10px' });
             gsap.set(truckR, { right: '10px' });
-            explain.textContent = "Kamyonları yola çıkarmak için butona tıkla!";
+            explain.textContent = t["vis-speed-explain-default"];
           });
         }
       },
@@ -808,22 +860,23 @@ export const puzzles = [
           name: "Kral Recher",
           text: "Hayır! Kanyon yolundaki kamyonları çarpmadan yönlendirdiniz... Ama önünüzdeki parıldayan gümüş kulelerin yükseklik kuralını çözemezsiniz!"
         },
-        renderVisualizer: (container) => {
+        renderVisualizer: (container, lang = 'tr') => {
+          const t = uiTranslations[lang];
           container.innerHTML = `
             <div class="vis-speed">
-              <p class="vis-instruction">İkinci karşılaşma durumunu simüle et:</p>
+              <p class="vis-instruction">${t["vis-speed-instruction"]}</p>
               <div class="speed-road">
-                <div class="speed-flag speed-flag--left">A Kalesi</div>
-                <div class="speed-truck speed-truck--left" id="truck-l">🚚<span class="truck-label">50 km/sa</span></div>
-                <div class="speed-truck speed-truck--right" id="truck-r">🚛<span class="truck-label">60 km/sa</span></div>
-                <div class="speed-flag speed-flag--right">B Kalesi</div>
-                <div class="meeting-point" id="meet-point" style="display:none;">💥 Karşılaşma Noktası (30. Dakika)</div>
+                <div class="speed-flag speed-flag--left">${lang === 'en' ? 'Castle A' : lang === 'ru' ? 'Замок A' : 'A Kalesi'}</div>
+                <div class="speed-truck speed-truck--left" id="truck-l">🚚<span class="truck-label">50 ${lang === 'en' ? 'km/h' : lang === 'ru' ? 'км/ч' : 'km/sa'}</span></div>
+                <div class="speed-truck speed-truck--right" id="truck-r">🚛<span class="truck-label">60 ${lang === 'en' ? 'km/h' : lang === 'ru' ? 'км/ч' : 'km/sa'}</span></div>
+                <div class="speed-flag speed-flag--right">${lang === 'en' ? 'Castle B' : lang === 'ru' ? 'Замок B' : 'B Kalesi'}</div>
+                <div class="meeting-point" id="meet-point" style="display:none;">${t["vis-speed-meeting"]} (${lang === 'en' ? '30th Minute' : lang === 'ru' ? '30-я минута' : '30. Dakika'})</div>
               </div>
               <div class="vis-actions" style="margin-top: 1.5rem;">
-                <button class="btn btn--secondary" id="btn-run-trucks">Kamyonları Çalıştır 🏁</button>
-                <button class="btn btn--secondary" id="btn-reset-trucks" style="display:none;">Sıfırla 🔄</button>
+                <button class="btn btn--secondary" id="btn-run-trucks">${t["vis-speed-btn-run"]}</button>
+                <button class="btn btn--secondary" id="btn-reset-trucks" style="display:none;">${t["vis-speed-btn-reset"]}</button>
               </div>
-              <div class="speed-explain" id="speed-explain">Kamyonları çalıştırmak için butona tıkla!</div>
+              <div class="speed-explain" id="speed-explain">${t["vis-speed-explain-default"]}</div>
             </div>
           `;
 
@@ -843,13 +896,13 @@ export const puzzles = [
             gsap.to(truckR, { right: '53%', duration: 2, ease: 'power1.inOut', onComplete: () => {
               meetPoint.style.display = 'block';
               gsap.fromTo(meetPoint, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(1.7)' });
-              explain.innerHTML = `
-                <strong>Karşılaşma Analizi:</strong><br>
-                - Kamyonlar birbirine doğru hareket ettiği için saatteki yaklaşma hızları: <span class="text-accent">50 + 60 = 110 km</span>'dir.<br>
-                - 30 dakika karşılaşma süresi, 1 saatin yarısıdır (1/2 saat).<br>
-                - Toplam yol: 110 × (1/2) = <span class="text-emerald" style="font-weight:bold;">55 km</span>.<br>
-                Hesaplamayı yapıp cevabını aşağıya girin!
-              `;
+              explain.innerHTML = t["vis-speed-explain-active"]
+                .replace("{v1}", "50")
+                .replace("{v2}", "60")
+                .replace("{vsum}", "110")
+                .replace("{min}", lang === 'en' ? "30" : lang === 'ru' ? "30" : "30")
+                .replace("{frac}", "1/2")
+                .replace("{ans}", "55");
             } });
           });
 
@@ -860,7 +913,7 @@ export const puzzles = [
             meetPoint.style.display = 'none';
             gsap.set(truckL, { left: '10px' });
             gsap.set(truckR, { right: '10px' });
-            explain.textContent = "Kamyonları çalıştırmak için butona tıkla!";
+            explain.textContent = t["vis-speed-explain-default"];
           });
         }
       }
@@ -901,10 +954,11 @@ export const puzzles = [
           name: "Vanessa",
           text: "Kulelerin yükseklik örüntüsünü çözdük! 5. kulenin tepesinden sihirli geçidin anahtarını aldım. Şimdi ikinci kulenin örüntüsüne geçelim!"
         },
-        renderVisualizer: (container) => {
+        renderVisualizer: (container, lang = 'tr') => {
+          const t = uiTranslations[lang];
           container.innerHTML = `
             <div class="vis-towers">
-              <p class="vis-instruction">Kulelerin yüksekliklerini görmek ve örüntüyü incelemek için aradaki soru işaretlerine tıkla:</p>
+              <p class="vis-instruction">${t["vis-towers-instruction"]}</p>
               <div class="towers-row">
                 <div class="tower-col" id="t-col-1" style="height: 50px;" data-height="3">
                   <div class="t-col-roof"></div><div class="t-col-body">3m</div>
@@ -926,7 +980,7 @@ export const puzzles = [
                   <div class="t-col-roof"></div><div class="t-col-body">?</div>
                 </div>
               </div>
-              <div class="towers-explain" id="towers-explain">Farkları görmek için aradaki ? işaretlerine tıkla!</div>
+              <div class="towers-explain" id="towers-explain">${t["vis-towers-explain-default"]}</div>
             </div>
           `;
 
@@ -940,17 +994,29 @@ export const puzzles = [
               diff.textContent = "+4";
               diff.classList.add('tower-col-diff--active');
               
-              if (i === 0) explain.innerHTML = "1. kule ile 2. kule arasındaki fark: <span class='text-accent'>4 metre</span>.";
-              else if (i === 1) explain.innerHTML = "2. kule ile 3. kule arasındaki fark: <span class='text-accent'>4 metre</span>.";
+              if (i === 0) {
+                explain.innerHTML = lang === 'en' ? "Difference between 1st and 2nd tower: <span class='text-accent'>4 meters</span>."
+                                  : lang === 'ru' ? "Разница между 1-й и 2-й башней: <span class='text-accent'>4 метра</span>."
+                                  : "1. kule ile 2. kule arasındaki fark: <span class='text-accent'>4 metre</span>.";
+              }
+              else if (i === 1) {
+                explain.innerHTML = lang === 'en' ? "Difference between 2nd and 3rd tower: <span class='text-accent'>4 meters</span>."
+                                  : lang === 'ru' ? "Разница между 2-й и 3-й башней: <span class='text-accent'>4 метра</span>."
+                                  : "2. kule ile 3. kule arasındaki fark: <span class='text-accent'>4 metre</span>.";
+              }
               else if (i === 2) {
                 cols[3].querySelector('.t-col-body').textContent = "15m";
                 cols[3].classList.add('tower-col--revealed');
-                explain.innerHTML = "Kurala göre 4. kulenin yüksekliği: 11 + 4 = <span class='text-accent'>15 metre</span> olur.";
+                explain.innerHTML = lang === 'en' ? "By rule, height of 4th tower: 11 + 4 = <span class='text-accent'>15 meters</span>."
+                                  : lang === 'ru' ? "По правилу, высота 4-й башни: 11 + 4 = <span class='text-accent'>15 метров</span>."
+                                  : "Kurala göre 4. kulenin yüksekliği: 11 + 4 = <span class='text-accent'>15 metre</span> olur.";
               }
               else if (i === 3) {
                 cols[4].querySelector('.t-col-body').textContent = "?";
                 cols[4].classList.add('tower-col--revealed');
-                explain.innerHTML = "Örüntü sürekli 4 metre artarak gidiyor. Bu durumda 5. kulenin yüksekliği kaç metre olmalıdır? Cevabını hesapla ve aşağıya gir!";
+                explain.innerHTML = lang === 'en' ? "Pattern consistently increases by 4 meters. What should be the height of 5th tower? Calculate and enter!"
+                                  : lang === 'ru' ? "Последовательность постоянно увеличивается на 4 метра. Какова должна быть высота 5-й башни? Вычислите и введите!"
+                                  : "Örüntü sürekli 4 metre artarak gidiyor. Bu durumda 5. kulenin yüksekliği kaç metre olmalıdır? Cevabını hesapla ve aşağıya gir!";
               }
             });
           });
@@ -966,10 +1032,11 @@ export const puzzles = [
           name: "Kral Recher",
           text: "Olamaz! Gümüş kulelerin şifresini de çözdünüz... Ama karanlık mağaradaki tek gözlülerin mağara gözü sayacı sizi durduracak!"
         },
-        renderVisualizer: (container) => {
+        renderVisualizer: (container, lang = 'tr') => {
+          const t = uiTranslations[lang];
           container.innerHTML = `
             <div class="vis-towers">
-              <p class="vis-instruction">İkinci örüntünün farklarını görmek için soru işaretlerine tıkla:</p>
+              <p class="vis-instruction">${lang === 'en' ? 'Click on question marks to see the differences of the second pattern:' : lang === 'ru' ? 'Нажмите на знаки вопроса, чтобы увидеть разности второй последовательности:' : 'İkinci örüntünün farklarını görmek için soru işaretlerine tıkla:'}</p>
               <div class="towers-row">
                 <div class="tower-col" id="t-col-1" style="height: 50px;" data-height="5">
                   <div class="t-col-roof"></div><div class="t-col-body">5</div>
@@ -991,7 +1058,7 @@ export const puzzles = [
                   <div class="t-col-roof"></div><div class="t-col-body">?</div>
                 </div>
               </div>
-              <div class="towers-explain" id="towers-explain">Farkları görmek için aradaki ? işaretlerine tıkla!</div>
+              <div class="towers-explain" id="towers-explain">${t["vis-towers-explain-default"]}</div>
             </div>
           `;
 
@@ -1005,13 +1072,27 @@ export const puzzles = [
               diff.textContent = "+7";
               diff.classList.add('tower-col-diff--active');
               
-              if (i === 0) explain.innerHTML = "5'ten 12'ye artış: <span class='text-accent'>7</span>.";
-              else if (i === 1) explain.innerHTML = "12'den 19'a artış: <span class='text-accent'>7</span>.";
-              else if (i === 2) explain.innerHTML = "19'dan 26'ya artış: <span class='text-accent'>7</span>.";
+              if (i === 0) {
+                explain.innerHTML = lang === 'en' ? "Increase from 5 to 12: <span class='text-accent'>7</span>."
+                                  : lang === 'ru' ? "Увеличение от 5 до 12: <span class='text-accent'>7</span>."
+                                  : "5'ten 12'ye artış: <span class='text-accent'>7</span>.";
+              }
+              else if (i === 1) {
+                explain.innerHTML = lang === 'en' ? "Increase from 12 to 19: <span class='text-accent'>7</span>."
+                                  : lang === 'ru' ? "Увеличение от 12 до 19: <span class='text-accent'>7</span>."
+                                  : "12'den 19'a artış: <span class='text-accent'>7</span>.";
+              }
+              else if (i === 2) {
+                explain.innerHTML = lang === 'en' ? "Increase from 19 to 26: <span class='text-accent'>7</span>."
+                                  : lang === 'ru' ? "Увеличение от 19 до 26: <span class='text-accent'>7</span>."
+                                  : "19'dan 26'ya artış: <span class='text-accent'>7</span>.";
+              }
               else if (i === 3) {
                 cols[4].querySelector('.t-col-body').textContent = "?";
                 cols[4].classList.add('tower-col--revealed');
-                explain.innerHTML = "Örüntü kuralı sürekli +7 şeklinde ilerliyor. 26'ya 7 ekleyerek 5. terimi hesapla ve gir!";
+                explain.innerHTML = lang === 'en' ? "Pattern rule is +7 consistently. Add 7 to 26 to find the 5th term!"
+                                  : lang === 'ru' ? "Правило последовательности — постоянно +7. Прибавьте 7 к 26, чтобы найти 5-й член!"
+                                  : "Örüntü kuralı sürekli +7 şeklinde ilerliyor. 26'ya 7 ekleyerek 5. terimi hesapla ve gir!";
               }
             });
           });
@@ -1054,21 +1135,22 @@ export const puzzles = [
           name: "Monoculus",
           text: "Harika! Benim soyumun göz bilmecesini çözdün. 3 gözlü kardeşlerim sana yolu gösterecek. Ama durun, mağarada ikinci bir canavar grubu daha var!"
         },
-        renderVisualizer: (container) => {
+        renderVisualizer: (container, lang = 'tr') => {
+          const t = uiTranslations[lang];
           container.innerHTML = `
             <div class="vis-eyes">
-              <p class="vis-instruction">3 Gözlü canavar sayısını ayarlayarak toplam göz sayısını 17 yapın:</p>
+              <p class="vis-instruction">${t["vis-eyes-instruction"].replace("{target}", "17")}</p>
               
               <div class="eyes-layout">
                 <div class="eyes-summary-box">
-                  <div class="sum-row">Toplam Canavar: <span class="sum-val">9</span></div>
-                  <div class="sum-row">Hedef Göz Sayısı: <span class="sum-val text-accent" style="font-weight:bold;">17</span></div>
-                  <div class="sum-row">Şu Anki Göz: <span class="sum-val" id="current-eyes-lbl">9</span></div>
+                  <div class="sum-row">${t["vis-eyes-monsters"]} <span class="sum-val">9</span></div>
+                  <div class="sum-row">${t["vis-eyes-target"]} <span class="sum-val text-accent" style="font-weight:bold;">17</span></div>
+                  <div class="sum-row">${t["vis-eyes-current"]} <span class="sum-val" id="current-eyes-lbl">9</span></div>
                 </div>
                 
                 <div class="eyes-controls">
                   <div class="control-group">
-                    <label>3 Gözlü Canavar Sayısı (<span id="three-eyes-lbl" style="font-weight:bold; color:var(--color-gold);">0</span>):</label>
+                    <label>${t["vis-eyes-label-3"]} (<span id="three-eyes-lbl" style="font-weight:bold; color:var(--color-gold);">0</span>):</label>
                     <div class="counter-buttons">
                       <button class="btn-count" id="btn-dec-3">-</button>
                       <button class="btn-count" id="btn-inc-3">+</button>
@@ -1078,7 +1160,7 @@ export const puzzles = [
               </div>
 
               <div class="monsters-grid" id="monsters-grid"></div>
-              <div class="eyes-explain" id="eyes-explain">Canavarların hepsi şu an 1 gözlü (toplam 9 göz). 3 gözlü canavarların sayısını arttırarak toplam gözü 17 yapın!</div>
+              <div class="eyes-explain" id="eyes-explain">${t["vis-eyes-explain-default"].replace("{target}", "17")}</div>
             </div>
           `;
 
@@ -1106,7 +1188,7 @@ export const puzzles = [
                 monster.classList.add('monster-item--three');
                 monster.innerHTML = `👾<span class="m-eyes-badge">👁️👁️👁️</span>`;
               } else {
-                monster.innerHTML = `👾<span class="m-eyes-badge">👁️</span>`;
+                monster.innerHTML = `👾<span class="m-eyes-badge">👁</span>`;
               }
               grid.appendChild(monster);
             }
@@ -1114,16 +1196,16 @@ export const puzzles = [
             if (currentEyes === 17) {
               currentLbl.className = 'sum-val text-emerald';
               currentLbl.style.fontWeight = 'bold';
-              explain.innerHTML = `
-                <span class="text-emerald" style="font-weight:bold;">Tebrikler! Toplam Göz 17 Oldu!</span><br>
-                - 3 Gözlü Canavar Sayısı = <span class="text-gold">${threeCount}</span><br>
-                - 1 Gözlü Canavar Sayısı = <span class="text-gold">${oneCount}</span><br>
-                Cevap olan 3 gözlü canavar sayısını aşağıdaki kutuya girin!
-              `;
+              explain.innerHTML = t["vis-eyes-explain-balanced"]
+                .replace("{target}", "17")
+                .replace("{three}", threeCount.toString())
+                .replace("{one}", oneCount.toString());
             } else {
               currentLbl.className = 'sum-val';
               currentLbl.style.fontWeight = 'normal';
-              explain.textContent = `Toplam Göz: ${currentEyes} (Hedef: 17). Canavarları ayarlamaya devam et.`;
+              explain.textContent = lang === 'en' ? `Total Eyes: ${currentEyes} (Target: 17). Keep adjusting monsters.`
+                                  : lang === 'ru' ? `Всего глаз: ${currentEyes} (Цель: 17). Настраивайте монстров.`
+                                  : `Toplam Göz: ${currentEyes} (Hedef: 17). Canavarları ayarlamaya devam et.`;
             }
           }
 
@@ -1156,21 +1238,22 @@ export const puzzles = [
           name: "Kral Recher",
           text: "Lanet olsun! Canavar mağarasından da geçtiniz... Ama Kraliçe Jayden'ı esir tuttuğum son kapıdaki sandık yalan/doğru mantık problemini asla çözemeyeceksiniz!"
         },
-        renderVisualizer: (container) => {
+        renderVisualizer: (container, lang = 'tr') => {
+          const t = uiTranslations[lang];
           container.innerHTML = `
             <div class="vis-eyes">
-              <p class="vis-instruction">3 Gözlü canavar sayısını ayarlayarak toplam göz sayısını 14 yapın:</p>
+              <p class="vis-instruction">${t["vis-eyes-instruction"].replace("{target}", "14")}</p>
               
               <div class="eyes-layout">
                 <div class="eyes-summary-box">
-                  <div class="sum-row">Toplam Canavar: <span class="sum-val">8</span></div>
-                  <div class="sum-row">Hedef Göz Sayısı: <span class="sum-val text-accent" style="font-weight:bold;">14</span></div>
-                  <div class="sum-row">Şu Anki Göz: <span class="sum-val" id="current-eyes-lbl">8</span></div>
+                  <div class="sum-row">${t["vis-eyes-monsters"]} <span class="sum-val">8</span></div>
+                  <div class="sum-row">${t["vis-eyes-target"]} <span class="sum-val text-accent" style="font-weight:bold;">14</span></div>
+                  <div class="sum-row">${t["vis-eyes-current"]} <span class="sum-val" id="current-eyes-lbl">8</span></div>
                 </div>
                 
                 <div class="eyes-controls">
                   <div class="control-group">
-                    <label>3 Gözlü Canavar Sayısı (<span id="three-eyes-lbl" style="font-weight:bold; color:var(--color-gold);">0</span>):</label>
+                    <label>${t["vis-eyes-label-3"]} (<span id="three-eyes-lbl" style="font-weight:bold; color:var(--color-gold);">0</span>):</label>
                     <div class="counter-buttons">
                       <button class="btn-count" id="btn-dec-3">-</button>
                       <button class="btn-count" id="btn-inc-3">+</button>
@@ -1180,7 +1263,7 @@ export const puzzles = [
               </div>
 
               <div class="monsters-grid" id="monsters-grid"></div>
-              <div class="eyes-explain" id="eyes-explain">Canavarların hepsi şu an 1 gözlü (toplam 8 göz). 3 gözlü canavarların sayısını ayarlayarak toplam gözü 14 yapın!</div>
+              <div class="eyes-explain" id="eyes-explain">${t["vis-eyes-explain-default"].replace("{target}", "14")}</div>
             </div>
           `;
 
@@ -1206,9 +1289,9 @@ export const puzzles = [
               monster.className = 'monster-item';
               if (i < threeCount) {
                 monster.classList.add('monster-item--three');
-                monster.innerHTML = `👾<span class="m-eyes-badge">👁️👁️👁️</span>`;
+                monster.innerHTML = `👾<span class="m-eyes-badge">👁👁👁</span>`;
               } else {
-                monster.innerHTML = `👾<span class="m-eyes-badge">👁️</span>`;
+                monster.innerHTML = `👾<span class="m-eyes-badge">👁</span>`;
               }
               grid.appendChild(monster);
             }
@@ -1216,16 +1299,16 @@ export const puzzles = [
             if (currentEyes === 14) {
               currentLbl.className = 'sum-val text-emerald';
               currentLbl.style.fontWeight = 'bold';
-              explain.innerHTML = `
-                <span class="text-emerald" style="font-weight:bold;">Tebrikler! Toplam Göz 14 Oldu!</span><br>
-                - 3 Gözlü Canavar Sayısı = <span class="text-gold">${threeCount}</span><br>
-                - 1 Gözlü Canavar Sayısı = <span class="text-gold">${oneCount}</span><br>
-                Cevap olan 3 gözlü canavar sayısını aşağıdaki kutuya girin!
-              `;
+              explain.innerHTML = t["vis-eyes-explain-balanced"]
+                .replace("{target}", "14")
+                .replace("{three}", threeCount.toString())
+                .replace("{one}", oneCount.toString());
             } else {
               currentLbl.className = 'sum-val';
               currentLbl.style.fontWeight = 'normal';
-              explain.textContent = `Toplam Göz: ${currentEyes} (Hedef: 14). Canavarları ayarlamaya devam et.`;
+              explain.textContent = lang === 'en' ? `Total Eyes: ${currentEyes} (Target: 14). Keep adjusting monsters.`
+                                  : lang === 'ru' ? `Всего глаз: ${currentEyes} (Цель: 14). Настраивайте монстров.`
+                                  : `Toplam Göz: ${currentEyes} (Hedef: 14). Canavarları ayarlamaya devam et.`;
             }
           }
 
@@ -1285,25 +1368,41 @@ export const puzzles = [
           name: "Kraliçe Jayden",
           text: "Sevgili çocuklar, ilk sandık varsayımını başarıyla çürüttünüz! Şimdi Recher'in son bir kez değiştirdiği ikinci sandık bilmecesine geçelim!"
         },
-        renderVisualizer: (container) => {
+        renderVisualizer: (container, lang = 'tr') => {
+          const t = uiTranslations[lang];
+          
+          const statements = lang === 'en' ? {
+            red: "The key is in this chest.",
+            blue: "The key is not in this chest.",
+            green: "The key is not in the Red chest."
+          } : lang === 'ru' ? {
+            red: "Ключ в этом сундуке.",
+            blue: "Ключа нет в этом сундуке.",
+            green: "Ключа нет в Красном сундуке."
+          } : {
+            red: "Anahtar bu sandıktadır.",
+            blue: "Anahtar bu sandıkta değildir.",
+            green: "Anahtar Kırmızı sandıkta değildir."
+          };
+
           container.innerHTML = `
             <div class="vis-logic">
-              <p class="vis-instruction">Anahtarın hangi kutuda olduğunu varsayarak sandıklara tıkla ve sadece TEK BİR DOĞRU ifade üreten sandığı bul:</p>
+              <p class="vis-instruction">${lang === 'en' ? 'Click on the chests assuming the location of the key to find the one with EXACTLY ONE TRUE statement:' : lang === 'ru' ? 'Нажимайте на сундуки, предполагая местонахождение ключа, чтобы найти тот, который дает РОВНО ОДНО ИСТИННОЕ утверждение:' : 'Anahtarın hangi kutuda olduğunu varsayarak sandıklara tıkla ve sadece TEK BİR DOĞRU ifade üreten sandığı bul:'}</p>
               <div class="chests-row">
                 <div class="chest-card" id="chest-red" data-chest="Red">
                   <div class="chest-icon">🟥</div>
-                  <div class="chest-title">Kırmızı Sandık</div>
-                  <div class="chest-statement font-handwritten">"Anahtar bu sandıktadır."</div>
+                  <div class="chest-title">${t["vis-logic-red"]}</div>
+                  <div class="chest-statement font-handwritten">"${statements.red}"</div>
                 </div>
                 <div class="chest-card" id="chest-blue" data-chest="Blue">
                   <div class="chest-icon">🟦</div>
-                  <div class="chest-title">Mavi Sandık</div>
-                  <div class="chest-statement font-handwritten">"Anahtar bu sandıkta değildir."</div>
+                  <div class="chest-title">${t["vis-logic-blue"]}</div>
+                  <div class="chest-statement font-handwritten">"${statements.blue}"</div>
                 </div>
                 <div class="chest-card" id="chest-green" data-chest="Green">
                   <div class="chest-icon">🟩</div>
-                  <div class="chest-title">Yeşil Sandık</div>
-                  <div class="chest-statement font-handwritten">"Anahtar Kırmızı sandıkta değildir."</div>
+                  <div class="chest-title">${t["vis-logic-green"]}</div>
+                  <div class="chest-statement font-handwritten">"${statements.green}"</div>
                 </div>
               </div>
               
@@ -1311,30 +1410,30 @@ export const puzzles = [
                 <table class="logic-table">
                   <thead>
                     <tr>
-                      <th>Varsayılan Anahtar Konumu</th>
-                      <th>Kırmızı Yazısı</th>
-                      <th>Mavi Yazısı</th>
-                      <th>Yeşil Yazısı</th>
-                      <th>Doğru İfade Sayısı</th>
+                      <th>${t["vis-logic-table-header-1"]}</th>
+                      <th>${t["vis-logic-table-header-2"]}</th>
+                      <th>${t["vis-logic-table-header-3"]}</th>
+                      <th>${t["vis-logic-table-header-4"]}</th>
+                      <th>${t["vis-logic-table-header-5"]}</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr id="row-assume-red">
-                      <td>Kırmızı'da ise</td>
+                      <td>${t["vis-logic-row-red"]}</td>
                       <td class="cell-status" id="s-red-red">-</td>
                       <td class="cell-status" id="s-red-blue">-</td>
                       <td class="cell-status" id="s-red-green">-</td>
                       <td class="cell-count" id="c-red">-</td>
                     </tr>
                     <tr id="row-assume-blue">
-                      <td>Mavi'de ise</td>
+                      <td>${t["vis-logic-row-blue"]}</td>
                       <td class="cell-status" id="s-blue-red">-</td>
                       <td class="cell-status" id="s-blue-blue">-</td>
                       <td class="cell-status" id="s-blue-green">-</td>
                       <td class="cell-count" id="c-blue">-</td>
                     </tr>
                     <tr id="row-assume-green">
-                      <td>Yeşil'de ise</td>
+                      <td>${t["vis-logic-row-green"]}</td>
                       <td class="cell-status" id="s-green-red">-</td>
                       <td class="cell-status" id="s-green-blue">-</td>
                       <td class="cell-status" id="s-green-green">-</td>
@@ -1343,12 +1442,26 @@ export const puzzles = [
                   </tbody>
                 </table>
               </div>
-              <div class="logic-explain" id="logic-explain">Sandıklardan birine tıklayarak mantıksal doğruluk durumlarını tablo üzerinden analiz et!</div>
+              <div class="logic-explain" id="logic-explain">${t["vis-logic-explain-default"]}</div>
             </div>
           `;
 
           const chests = container.querySelectorAll('.chest-card');
           const explain = container.querySelector('#logic-explain');
+
+          const explainTexts = lang === 'en' ? {
+            Red: "<strong>Red Chest Assumption:</strong> The Red statement is TRUE and the Blue statement is TRUE (2 True). Does this match Recher's rule of 'exactly one true statement'? Check the table!",
+            Blue: "<strong>Blue Chest Assumption:</strong> The Red statement is a LIE, the Blue statement is a LIE, and the Green statement is TRUE. Check the number of true statements in the table!",
+            Green: "<strong>Green Chest Assumption:</strong> The Blue statement is TRUE and the Green statement is TRUE (2 True). Analyze this row in the table too!"
+          } : lang === 'ru' ? {
+            Red: "<strong>Предположение о Красном сундуке:</strong> Утверждение Красного становится ИСТИНОЙ, и утверждение Синего становится ИСТИНОЙ (2 Истины). Соответствует ли это правилу Решера 'ровно одно истинное высказывание'? Проверьте таблицу!",
+            Blue: "<strong>Предположение о Синем сундуке:</strong> Утверждение Красного — ЛОЖЬ, Синего — ЛОЖЬ, а Зеленого — ИСТИНА. Проверьте количество верных утверждений в таблице!",
+            Green: "<strong>Предположение о Зеленом сундуке:</strong> Утверждение Синего — ИСТИНА, а Зеленого — ИСТИНА (2 Истины). Проанализируйте эту строку в таблице!"
+          } : {
+            Red: "<strong>Kırmızı Sandık Varsayımı:</strong> Kırmızı ifadesi DOĞRU ve Mavi ifadesi DOĞRU olur (2 Doğru). Bu durum Recher'in 'sadece tek bir doğru ifade var' kuralına uyuyor mu? Tabloyu kontrol et!",
+            Blue: "<strong>Mavi Sandık Varsayımı:</strong> Kırmızı ifadesi YALAN, Mavi ifadesi YALAN ve Yeşil ifadesi DOĞRU olur. Tablodaki Doğru sayısı sütununu incele!",
+            Green: "<strong>Yeşil Sandık Varsayımı:</strong> Mavi ifadesi DOĞRU ve Yeşil ifadesi DOĞRU olur (2 Doğru). Bu satırı da tablodan incele!"
+          };
 
           const data = {
             Red: {
@@ -1359,7 +1472,7 @@ export const puzzles = [
                 green: { el: container.querySelector('#s-red-green'), isTrue: false }
               },
               countEl: container.querySelector('#c-red'),
-              explainText: "<strong>Kırmızı Sandık Varsayımı:</strong> Kırmızı ifadesi DOĞRU ve Mavi ifadesi DOĞRU olur (2 Doğru). Bu durum Recher'in 'sadece tek bir doğru ifade var' kuralına uyuyor mu? Tabloyu kontrol et!"
+              explainText: explainTexts.Red
             },
             Blue: {
               row: container.querySelector('#row-assume-blue'),
@@ -1369,7 +1482,7 @@ export const puzzles = [
                 green: { el: container.querySelector('#s-blue-green'), isTrue: true }
               },
               countEl: container.querySelector('#c-blue'),
-              explainText: "<strong>Mavi Sandık Varsayımı:</strong> Kırmızı ifadesi YALAN, Mavi ifadesi YALAN ve Yeşil ifadesi DOĞRU olur. Tablodaki Doğru sayısı sütununu incele!"
+              explainText: explainTexts.Blue
             },
             Green: {
               row: container.querySelector('#row-assume-green'),
@@ -1379,7 +1492,7 @@ export const puzzles = [
                 green: { el: container.querySelector('#s-green-green'), isTrue: true }
               },
               countEl: container.querySelector('#c-green'),
-              explainText: "<strong>Yeşil Sandık Varsayımı:</strong> Mavi ifadesi DOĞRU ve Yeşil ifadesi DOĞRU olur (2 Doğru). Bu satırı da tablodan incele!"
+              explainText: explainTexts.Green
             }
           };
 
@@ -1398,12 +1511,12 @@ export const puzzles = [
               let trueCount = 0;
               Object.keys(currentData.statuses).forEach(key => {
                 const stat = currentData.statuses[key];
-                stat.el.textContent = stat.isTrue ? "DOĞRU" : "YALAN";
+                stat.el.textContent = stat.isTrue ? t["vis-logic-cell-true"] : t["vis-logic-cell-false"];
                 stat.el.className = `cell-status ${stat.isTrue ? 'cell-status--true' : 'cell-status--false'}`;
                 if (stat.isTrue) trueCount++;
               });
               
-              currentData.countEl.textContent = `${trueCount} Doğru`;
+              currentData.countEl.textContent = t["vis-logic-cell-count"].replace("{count}", trueCount);
               currentData.countEl.className = `cell-count ${trueCount === 1 ? 'cell-count--valid' : 'cell-count--invalid'}`;
               
               explain.innerHTML = currentData.explainText;
@@ -1421,25 +1534,41 @@ export const puzzles = [
           name: "Kraliçe Jayden",
           text: "Anahtar döndü ve son kilit açıldı! Kapı nihayet ardına kadar açılıyor. Gelin ve beni bu zindandan kurtarın!"
         },
-        renderVisualizer: (container) => {
+        renderVisualizer: (container, lang = 'tr') => {
+          const t = uiTranslations[lang];
+
+          const statements = lang === 'en' ? {
+            red: "The key is in the Green chest.",
+            blue: "The key is in this chest.",
+            green: "The key is not in the Blue chest."
+          } : lang === 'ru' ? {
+            red: "Ключ в Зеленом сундуке.",
+            blue: "Ключ в этом сундуке.",
+            green: "Ключа нет в Синем сундуке."
+          } : {
+            red: "Anahtar Yeşil sandıktadır.",
+            blue: "Anahtar bu sandıktadır.",
+            green: "Anahtar Mavi sandıkta değildir."
+          };
+
           container.innerHTML = `
             <div class="vis-logic">
-              <p class="vis-instruction">Anahtarın konumunu simüle ederek tablodan sadece TEK BİR YALAN (2 Doğru) üreten sandığı belirle:</p>
+              <p class="vis-instruction">${lang === 'en' ? 'Click on the chests assuming the location of the key to find the one with EXACTLY ONE LIE (2 True) statement:' : lang === 'ru' ? 'Нажимайте на сундуки, предполагая местонахождение ключа, чтобы найти тот, который дает РОВНО ОДНО ЛОЖНОЕ (2 Верных) утверждение:' : 'Anahtarın konumunu simüle ederek tablodan sadece TEK BİR YALAN (2 Doğru) üreten sandığı belirle:'}</p>
               <div class="chests-row">
                 <div class="chest-card" id="chest-red" data-chest="Red">
                   <div class="chest-icon">🟥</div>
-                  <div class="chest-title">Kırmızı Sandık</div>
-                  <div class="chest-statement font-handwritten">"Anahtar Yeşil sandıktadır."</div>
+                  <div class="chest-title">${t["vis-logic-red"]}</div>
+                  <div class="chest-statement font-handwritten">"${statements.red}"</div>
                 </div>
                 <div class="chest-card" id="chest-blue" data-chest="Blue">
                   <div class="chest-icon">🟦</div>
-                  <div class="chest-title">Mavi Sandık</div>
-                  <div class="chest-statement font-handwritten">"Anahtar bu sandıktadır."</div>
+                  <div class="chest-title">${t["vis-logic-blue"]}</div>
+                  <div class="chest-statement font-handwritten">"${statements.blue}"</div>
                 </div>
                 <div class="chest-card" id="chest-green" data-chest="Green">
                   <div class="chest-icon">🟩</div>
-                  <div class="chest-title">Yeşil Sandık</div>
-                  <div class="chest-statement font-handwritten">"Anahtar Mavi sandıkta değildir."</div>
+                  <div class="chest-title">${t["vis-logic-green"]}</div>
+                  <div class="chest-statement font-handwritten">"${statements.green}"</div>
                 </div>
               </div>
               
@@ -1447,30 +1576,30 @@ export const puzzles = [
                 <table class="logic-table">
                   <thead>
                     <tr>
-                      <th>Varsayılan Anahtar Konumu</th>
-                      <th>Kırmızı Yazısı</th>
-                      <th>Mavi Yazısı</th>
-                      <th>Yeşil Yazısı</th>
-                      <th>Doğru İfade Sayısı</th>
+                      <th>${t["vis-logic-table-header-1"]}</th>
+                      <th>${t["vis-logic-table-header-2"]}</th>
+                      <th>${t["vis-logic-table-header-3"]}</th>
+                      <th>${t["vis-logic-table-header-4"]}</th>
+                      <th>${t["vis-logic-table-header-5"]}</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr id="row-assume-red">
-                      <td>Kırmızı'da ise</td>
+                      <td>${t["vis-logic-row-red"]}</td>
                       <td class="cell-status" id="s-red-red">-</td>
                       <td class="cell-status" id="s-red-blue">-</td>
                       <td class="cell-status" id="s-red-green">-</td>
                       <td class="cell-count" id="c-red">-</td>
                     </tr>
                     <tr id="row-assume-blue">
-                      <td>Mavi'de ise</td>
+                      <td>${t["vis-logic-row-blue"]}</td>
                       <td class="cell-status" id="s-blue-red">-</td>
                       <td class="cell-status" id="s-blue-blue">-</td>
                       <td class="cell-status" id="s-blue-green">-</td>
                       <td class="cell-count" id="c-blue">-</td>
                     </tr>
                     <tr id="row-assume-green">
-                      <td>Yeşil'de ise</td>
+                      <td>${t["vis-logic-row-green"]}</td>
                       <td class="cell-status" id="s-green-red">-</td>
                       <td class="cell-status" id="s-green-blue">-</td>
                       <td class="cell-status" id="s-green-green">-</td>
@@ -1479,12 +1608,26 @@ export const puzzles = [
                   </tbody>
                 </table>
               </div>
-              <div class="logic-explain" id="logic-explain">Kutuları test etmek için sandıklardan birine tıkla!</div>
+              <div class="logic-explain" id="logic-explain">${lang === 'en' ? 'Click on one of the chests to test!' : lang === 'ru' ? 'Нажмите на один из сундуков для тестирования!' : 'Kutuları test etmek için sandıklardan birine tıkla!'}</div>
             </div>
           `;
 
           const chests = container.querySelectorAll('.chest-card');
           const explain = container.querySelector('#logic-explain');
+
+          const explainTexts = lang === 'en' ? {
+            Red: "<strong>Red Chest Assumption:</strong> The Red statement is a LIE, the Blue statement is a LIE, and the Green statement is TRUE (1 True, 2 Lies). That means 2 lie statements. Does it satisfy the rule?",
+            Blue: "<strong>Blue Chest Assumption:</strong> The Red statement is a LIE, the Blue statement is TRUE, and the Green statement is a LIE (1 True, 2 Lies). There are 2 lie statements here too.",
+            Green: "<strong>Green Chest Assumption:</strong> The Red statement is TRUE, the Blue statement is a LIE, and the Green statement is TRUE (2 True, 1 Lie). So there is exactly one lie statement! Check this row in the table!"
+          } : lang === 'ru' ? {
+            Red: "<strong>Предположение о Красном сундуке:</strong> Утверждение Красного — ЛОЖЬ, Синего — ЛОЖЬ, Зеленого — ИСТИНА (1 Истина, 2 Лжи). То есть 2 ложных утверждения. Удовлетворяет ли это условию?",
+            Blue: "<strong>Предположение о Синем сундуке:</strong> Утверждение Красного — ЛОЖЬ, Синего — ИСТИНА, Зеленого — ЛОЖЬ (1 Истина, 2 Лжи). Здесь также 2 ложных утверждения.",
+            Green: "<strong>Предположение о Зеленом сундуке:</strong> Утверждение Красного — ИСТИНА, Синего — ЛОЖЬ, Зеленого — ИСТИНА (2 Истины, 1 Ложь). То есть ровно одно ложное утверждение! Проверьте эту строку в таблице!"
+          } : {
+            Red: "<strong>Kırmızı Sandık Varsayımı:</strong> Kırmızı ifadesi YALAN, Mavi ifadesi YALAN, Yeşil ifadesi DOĞRU olur (1 Doğru, 2 Yalan). Yani 2 Yalan ifade oluşur. Kuralı sağlar mı?",
+            Blue: "<strong>Mavi Sandık Varsayımı:</strong> Kırmızı ifadesi YALAN, Mavi ifadesi DOĞRU, Yeşil ifadesi YALAN olur (1 Doğru, 2 Yalan). Burada da 2 Yalan ifade vardır.",
+            Green: "<strong>Yeşil Sandık Varsayımı:</strong> Kırmızı ifadesi DOĞRU, Mavi ifadesi YALAN, Yeşil ifadesi DOĞRU olur (2 Doğru, 1 Yalan). Yani sadece tek bir Yalan ifade vardır! Tablodaki satırı kontrol et!"
+          };
 
           const data = {
             Red: {
@@ -1495,7 +1638,7 @@ export const puzzles = [
                 green: { el: container.querySelector('#s-red-green'), isTrue: true }
               },
               countEl: container.querySelector('#c-red'),
-              explainText: "<strong>Kırmızı Sandık Varsayımı:</strong> Kırmızı ifadesi YALAN, Mavi ifadesi YALAN, Yeşil ifadesi DOĞRU olur (1 Doğru, 2 Yalan). Yani 2 Yalan ifade oluşur. Kuralı sağlar mı?"
+              explainText: explainTexts.Red
             },
             Blue: {
               row: container.querySelector('#row-assume-blue'),
@@ -1505,7 +1648,7 @@ export const puzzles = [
                 green: { el: container.querySelector('#s-blue-green'), isTrue: false }
               },
               countEl: container.querySelector('#c-blue'),
-              explainText: "<strong>Mavi Sandık Varsayımı:</strong> Kırmızı ifadesi YALAN, Mavi ifadesi DOĞRU, Yeşil ifadesi YALAN olur (1 Doğru, 2 Yalan). Burada da 2 Yalan ifade vardır."
+              explainText: explainTexts.Blue
             },
             Green: {
               row: container.querySelector('#row-assume-green'),
@@ -1515,7 +1658,7 @@ export const puzzles = [
                 green: { el: container.querySelector('#s-green-green'), isTrue: true }
               },
               countEl: container.querySelector('#c-green'),
-              explainText: "<strong>Yeşil Sandık Varsayımı:</strong> Kırmızı ifadesi DOĞRU, Mavi ifadesi YALAN, Yeşil ifadesi DOĞRU olur (2 Doğru, 1 Yalan). Yani sadece tek bir Yalan ifade vardır! Tablodaki satırı kontrol et!"
+              explainText: explainTexts.Green
             }
           };
 
@@ -1534,12 +1677,12 @@ export const puzzles = [
               let trueCount = 0;
               Object.keys(currentData.statuses).forEach(key => {
                 const stat = currentData.statuses[key];
-                stat.el.textContent = stat.isTrue ? "DOĞRU" : "YALAN";
+                stat.el.textContent = stat.isTrue ? t["vis-logic-cell-true"] : t["vis-logic-cell-false"];
                 stat.el.className = `cell-status ${stat.isTrue ? 'cell-status--true' : 'cell-status--false'}`;
                 if (stat.isTrue) trueCount++;
               });
               
-              currentData.countEl.textContent = `${trueCount} Doğru`;
+              currentData.countEl.textContent = t["vis-logic-cell-count"].replace("{count}", trueCount);
               currentData.countEl.className = `cell-count ${trueCount === 2 ? 'cell-count--valid' : 'cell-count--invalid'}`;
               
               explain.innerHTML = currentData.explainText;

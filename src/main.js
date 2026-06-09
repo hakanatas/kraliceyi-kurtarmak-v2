@@ -4,6 +4,7 @@ import { initCanvas, triggerExplosion, triggerConfetti, togglePauseCanvas, destr
 import { initAudio, playClick, playSuccess, playFailure, playMagic, toggleDrone } from './audio.js';
 import { puzzles } from './puzzles.js';
 import { generateCertificate } from './certificate.js';
+import { uiTranslations, dialogueTranslations, puzzleTranslations } from './translations.js';
 import gsap from 'gsap';
 import Lenis from 'lenis';
 
@@ -15,6 +16,17 @@ let isMuted = false;
 let isBgActive = true;
 let currentOpenPuzzle = null;
 let currentTaskIndex = 0; // Index of the sub-task in the active gate (0 or 1)
+let currentLang = localStorage.getItem('game_lang');
+if (!currentLang) {
+  const browserLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+  if (browserLang.startsWith('ru')) {
+    currentLang = 'ru';
+  } else if (browserLang.startsWith('en')) {
+    currentLang = 'en';
+  } else {
+    currentLang = 'tr';
+  }
+}
 
 // Initialize smooth scrolling with Lenis
 const lenis = new Lenis();
@@ -202,7 +214,21 @@ window.addEventListener('DOMContentLoaded', () => {
       playSoundEffect(playClick);
       let name = playerNameInput.value.trim();
       if (name === '') {
-        const defaultNames = [
+        const defaultNames = currentLang === 'en' ? [
+          "Math Explorer Alex",
+          "Emerald Guardian Vanessa",
+          "Magic Number Master Sam",
+          "Hero of Lugubria Alex",
+          "Mystery Solver Vanessa",
+          "Labyrinth Wanderer Sam"
+        ] : currentLang === 'ru' ? [
+          "Искатель математики Алекс",
+          "Изумрудный хранитель Ванесса",
+          "Мастер волшебных чисел Сэм",
+          "Герой Лугубрии Алекс",
+          "Разгадыватель тайн Ванесса",
+          "Скиталец по лабиринту Сэм"
+        ] : [
           "Matematik Kaşifi Aleks",
           "Zümrüt Koruyucusu Vanessa",
           "Sihirli Sayı Ustası Sam",
@@ -216,7 +242,8 @@ window.addEventListener('DOMContentLoaded', () => {
       // Fill name in printable worksheet header
       const printNameEl = document.querySelector('.ws-header-meta .meta-field:first-child');
       if (printNameEl) {
-        printNameEl.innerHTML = `<strong>Öğrencinin Adı Soyadı:</strong> ${name}`;
+        const metaLabel = currentLang === 'en' ? "Student's Full Name:" : currentLang === 'ru' ? "Имя и фамилия ученика:" : "Öğrencinin Adı Soyadı:";
+        printNameEl.innerHTML = `<strong>${metaLabel}</strong> ${name}`;
       }
       
       // Trigger printing
@@ -276,6 +303,40 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   setupMapTooltips();
+
+  // Initialize language dropdown & translate UI
+  const langSelect = document.getElementById('langSelect');
+  if (langSelect) {
+    langSelect.value = currentLang;
+    langSelect.addEventListener('change', (e) => {
+      changeLanguage(e.target.value);
+    });
+  }
+  changeLanguage(currentLang);
+
+  // Auto-detect country if no user language preference is saved
+  if (!localStorage.getItem('game_lang')) {
+    fetch('https://ipapi.co/json/')
+      .then(res => res.json())
+      .then(data => {
+        // Double check no selection was made during the fetch
+        if (!localStorage.getItem('game_lang')) {
+          const country = (data.country_code || '').toLowerCase();
+          let geoLang = 'en';
+          if (country === 'tr' || country === 'az') {
+            geoLang = 'tr';
+          } else if (['ru', 'by', 'kz', 'kg', 'ua', 'uz', 'am', 'ge', 'md', 'tj', 'tm'].includes(country)) {
+            geoLang = 'ru';
+          } else {
+            geoLang = 'en';
+          }
+          changeLanguage(geoLang);
+        }
+      })
+      .catch(err => {
+        console.log("Geo IP lookup failed, fell back to browser default locale:", err);
+      });
+  }
 
   // Update starting states
   updatePencilTracker();
@@ -472,15 +533,40 @@ function handleTowerClick(gateId) {
 
 // Floating map tooltip tracking
 function setupMapTooltips() {
-  const towerDescriptions = {
-    1: { title: "1. Kapı: Sihirli Kalem", desc: "Kral Recher'in ilk kapısı. Ters işlem boru hattını çözüp sihirli kalemin gücünü zihnimizle kurmalıyız.", chapter: "Zindana Giriş" },
-    2: { title: "2. Kapı: Lav Köprüsü", desc: "Altından kızgın lavların aktığı nehir. Köprünün taş kuralını çözerek karşıya güvenle geç.", chapter: "Lav Nehri" },
-    3: { title: "3. Kapı: Zümrüt Kulesi", desc: "Kulenin tepesindeki kesir alevleri yolu kapadı. Zümrütleri kesir modellerine ayırarak bilmeceyi çöz.", chapter: "Zümrüt Labirenti" },
-    4: { title: "4. Kapı: Muhafız Geçidi", desc: "Recher'in iki dev nöbetçisi kapıda bekliyor. Yaş katı terazi dengesini kurarak muhafızları aş.", chapter: "Muhafız Kışlası" },
-    5: { title: "5. Kapı: Kamyon Karşılaşması", desc: "A ve B kalelerinden karşılaşan sevimli kamyonların yolunu ve karşılaşma süresini hesapla.", chapter: "Kanyon Geçidi" },
-    6: { title: "6. Kapı: Gümüş Kuleler", desc: "Bahçedeki parıldayan gümüş kulelerin yükseklik örüntüsü kuralını bulup kilidi aç.", chapter: "Kraliyet Bahçesi" },
-    7: { title: "7. Kapı: Monoculus Soyu", desc: "Karanlık mağaradaki tek gözlü ve 3 gözlü canavarların toplam göz sayılarını varsayım yaparak dengele.", chapter: "Karanlık Mağara" },
-    8: { title: "8. Kapı: Kraliçe'nin Zindanı", desc: "Kraliçe Jayden burada kilitli! Mantık sandıklarını analiz ederek doğru sandığı ve anahtarı belirle.", chapter: "Büyük Salon" }
+  const getTooltipData = (gateId) => {
+    const data = {
+      tr: {
+        1: { title: "1. Kapı: Sihirli Kalem", desc: "Kral Recher'in ilk kapısı. Ters işlem boru hattını çözüp sihirli kalemin gücünü zihnimizle kurmalıyız." },
+        2: { title: "2. Kapı: Lav Köprüsü", desc: "Altından kızgın lavların aktığı nehir. Köprünün taş kuralını çözerek karşıya güvenle geç." },
+        3: { title: "3. Kapı: Zümrüt Kulesi", desc: "Kulenin tepesindeki kesir alevleri yolu kapadı. Zümrütleri kesir modellerine ayırarak bilmeceyi çöz." },
+        4: { title: "4. Kapı: Muhafız Geçidi", desc: "Recher'in iki dev nöbetçisi kapıda bekliyor. Yaş katı terazi dengesini kurarak muhafızları aş." },
+        5: { title: "5. Kapı: Kamyon Karşılaşması", desc: "A ve B kalelerinden karşılaşan sevimli kamyonların yolunu ve karşılaşma süresini hesapla." },
+        6: { title: "6. Kapı: Gümüş Kuleler", desc: "Bahçedeki parıldayan gümüş kulelerin yükseklik örüntüsü kuralını bulup kilidi aç." },
+        7: { title: "7. Kapı: Monoculus Soyu", desc: "Karanlık mağaradaki tek gözlü ve 3 gözlü canavarların toplam göz sayılarını varsayım yaparak dengele." },
+        8: { title: "8. Kapı: Kraliçe'nin Zindanı", desc: "Kraliçe Jayden burada kilitli! Mantık sandıklarını analiz ederek doğru sandığı ve anahtarı belirle." }
+      },
+      en: {
+        1: { title: "Gate 1: Magic Pencil", desc: "King Recher's first gate. Solve the reverse operation pipeline to restore the magic pencil's power in your mind." },
+        2: { title: "Gate 2: Lava Bridge", desc: "A river flowing with hot lava. Unravel the stone pattern's rule to safely cross the bridge." },
+        3: { title: "Gate 3: Emerald Tower", desc: "Fraction flames block the path at the top of the tower. Divide the emeralds into fractional models to solve it." },
+        4: { title: "Gate 4: Guard Passage", desc: "Recher's two giant guards await at the gate. Balance the age-factor scale to bypass them." },
+        5: { title: "Gate 5: Truck Encounter", desc: "Calculate the meeting distance and duration of the cute trucks heading from castles A and B." },
+        6: { title: "Gate 6: Silver Towers", desc: "Find the height pattern rule of the glowing silver towers in the garden to open the lock." },
+        7: { title: "Gate 7: Monoculus Clan", desc: "Balance the total eye counts of the 1-eyed and 3-eyed monsters in the dark cave by making assumptions." },
+        8: { title: "Gate 8: Queen's Dungeon", desc: "Queen Jayden is locked here! Analyze the logic chests to determine the correct chest and key." }
+      },
+      ru: {
+        1: { title: "Ворота 1: Волшебный Карандаш", desc: "Первые ворота Короля Решера. Решите обратные операции трубопровода, чтобы мысленно восстановить силу карандаша." },
+        2: { title: "Ворота 2: Лавовый Мост", desc: "Река с горячей лавой. Разгадайте правило узора камней моста, чтобы безопасно переправиться." },
+        3: { title: "Ворота 3: Изумрудная Башня", desc: "Пламя дробей на вершине башни преградило путь. Разделите изумруды на долевые модели, чтобы решить загадку." },
+        4: { title: "Ворота 4: Пост Охраны", desc: "Два гигантских стражника Решера ждут у ворот. Сбалансируйте весы возраста стражей, чтобы пройти." },
+        5: { title: "Ворота 5: Встреча Грузовиков", desc: "Рассчитайте расстояние и время встречи милых грузовиков, едущих из замков А и Б." },
+        6: { title: "Ворота 6: Серебряные Башни", desc: "Найдите закономерность высоты светящихся серебряных башен в саду, чтобы открыть замок." },
+        7: { title: "Ворота 7: Глаза Монстров", desc: "Сбалансируйте общее число глаз одноглазых и трехглазых монстров в темной пещере методом подбора." },
+        8: { title: "Ворота 8: Темница Королевы", desc: "Королева Джейден заперта здесь! Проанализируйте сундуки, чтобы найти правильный сундук и ключ." }
+      }
+    };
+    return data[currentLang] ? data[currentLang][gateId] : data['tr'][gateId];
   };
 
   for (let i = 1; i <= 8; i++) {
@@ -490,15 +576,15 @@ function setupMapTooltips() {
     node.addEventListener('mouseenter', () => {
       if (window.matchMedia('(pointer: coarse)').matches) return;
 
-      const info = towerDescriptions[i];
-      let statusText = "Kilitli Bölge";
+      const info = getTooltipData(i);
+      let statusText = uiTranslations[currentLang]["status-locked"] || "Kilitli Bölge";
       let statusClass = "locked";
 
       if (unlockedGates.includes(i)) {
-        statusText = "Kilidi Açıldı";
+        statusText = uiTranslations[currentLang]["status-unlocked"] || "Kilidi Açıldı";
         statusClass = "unlocked";
       } else if (i === activeGate) {
-        statusText = "Aktif Kapı";
+        statusText = uiTranslations[currentLang]["status-active"] || "Aktif Kapı";
         statusClass = "active";
       }
 
@@ -561,20 +647,34 @@ function openPuzzleModal(gateId, isAlreadySolved = false) {
     tabContentWorksheet.classList.remove('tab-content--active');
   }
 
+  // Resolve translated texts from translations
+  const pTrans = puzzleTranslations[currentLang] ? puzzleTranslations[currentLang][p.id] : null;
+  const chapterText = pTrans ? pTrans.chapter : p.chapter;
+  const titleText = pTrans ? pTrans.title : p.title;
+  const charText = pTrans ? pTrans.character : p.character;
+  const narrativeText = pTrans ? pTrans.narrative : p.narrative;
+
   // Populate Worksheet Preview and print data
   if (p.worksheet) {
-    if (wsTopic) wsTopic.textContent = p.worksheet.topic;
-    if (wsOutcome) wsOutcome.textContent = p.worksheet.outcome;
-    if (wsQ1Text) wsQ1Text.textContent = p.worksheet.questions[0].text;
-    if (wsQ2Text) wsQ2Text.textContent = p.worksheet.questions[1].text;
+    const wsTrans = pTrans ? pTrans.worksheet : null;
+    const wsTopicText = wsTrans ? wsTrans.topic : p.worksheet.topic;
+    const wsOutcomeText = wsTrans ? wsTrans.outcome : p.worksheet.outcome;
+    const wsQ1 = wsTrans ? wsTrans.q1 : p.worksheet.questions[0].text;
+    const wsQ2 = wsTrans ? wsTrans.q2 : p.worksheet.questions[1].text;
+    const wsTitleText = wsTrans ? wsTrans.title : p.worksheet.title;
+
+    if (wsTopic) wsTopic.textContent = wsTopicText;
+    if (wsOutcome) wsOutcome.textContent = wsOutcomeText;
+    if (wsQ1Text) wsQ1Text.textContent = wsQ1;
+    if (wsQ2Text) wsQ2Text.textContent = wsQ2;
 
     // Populate hidden printable worksheet details
-    if (wsPrintTitle) wsPrintTitle.textContent = `BÖLÜM ${p.id}: ${p.worksheet.title.toUpperCase()}`;
-    if (wsPrintTopic) wsPrintTopic.textContent = p.worksheet.topic;
-    if (wsPrintOutcome) wsPrintOutcome.textContent = p.worksheet.outcome;
-    if (wsPrintNarrative) wsPrintNarrative.textContent = p.narrative;
-    if (wsPrintQ1Text) wsPrintQ1Text.textContent = p.worksheet.questions[0].text;
-    if (wsPrintQ2Text) wsPrintQ2Text.textContent = p.worksheet.questions[1].text;
+    if (wsPrintTitle) wsPrintTitle.textContent = `${uiTranslations[currentLang]["chapter-lbl"]} ${p.id}: ${wsTitleText.toUpperCase()}`;
+    if (wsPrintTopic) wsPrintTopic.textContent = wsTopicText;
+    if (wsPrintOutcome) wsPrintOutcome.textContent = wsOutcomeText;
+    if (wsPrintNarrative) wsPrintNarrative.textContent = narrativeText;
+    if (wsPrintQ1Text) wsPrintQ1Text.textContent = wsQ1;
+    if (wsPrintQ2Text) wsPrintQ2Text.textContent = wsQ2;
   }
 
   // Clean submit button mode attributes
@@ -585,11 +685,11 @@ function openPuzzleModal(gateId, isAlreadySolved = false) {
   magicKey.style.display = 'none';
 
   // Set modal core titles
-  chapterLabel.textContent = `BÖLÜM ${p.id}: ${p.chapter}`;
-  puzzleTitle.textContent = p.title;
+  chapterLabel.textContent = `${uiTranslations[currentLang]["chapter-lbl"]} ${p.id}: ${chapterText}`;
+  puzzleTitle.textContent = titleText;
   speechAvatar.textContent = p.avatar;
-  speechName.textContent = p.character;
-  speechText.textContent = p.narrative;
+  speechName.textContent = charText;
+  speechText.textContent = narrativeText;
 
   // Clean details
   visWorkarea.innerHTML = '';
@@ -598,7 +698,7 @@ function openPuzzleModal(gateId, isAlreadySolved = false) {
   hintBox.classList.remove('info-box--active');
   solutionBox.classList.remove('info-box--active');
   
-  btnSubmitAnswer.textContent = "Kapıyı Aç 🗝️";
+  btnSubmitAnswer.textContent = uiTranslations[currentLang]["btn-submit"] || "Kapıyı Aç 🗝️";
   btnSubmitAnswer.style.display = 'inline-flex';
   btnShowHint.style.display = 'inline-flex';
   pInput.style.display = 'inline-block';
@@ -612,16 +712,18 @@ function openPuzzleModal(gateId, isAlreadySolved = false) {
 
     currentTaskIndex = p.tasks.length - 1;
     const task = p.tasks[currentTaskIndex];
-    questionText.textContent = task.question;
-    taskProgressLabel.textContent = "Tamamlandı ✅";
-    task.renderVisualizer(visWorkarea);
+    const pTransTask = pTrans ? pTrans.tasks[currentTaskIndex] : null;
+    questionText.textContent = pTransTask ? pTransTask.question : task.question;
+    taskProgressLabel.textContent = uiTranslations[currentLang]["modal-completed"] || "Tamamlandı ✅";
+    task.renderVisualizer(visWorkarea, currentLang);
     
     pInput.value = task.answer.toString();
     pInput.disabled = true;
     
+    const solTitle = currentLang === 'en' ? 'This gate was opened before!' : currentLang === 'ru' ? 'Эти ворота были открыты ранее!' : 'Bu Kapı Daha Önce Açıldı!';
     solutionBox.innerHTML = `
-      <p style="font-weight: bold; font-size: 1.1rem; margin-bottom: 5px;">🎉 Bu Kapı Daha Önce Açıldı!</p>
-      ${task.solution}
+      <p style="font-weight: bold; font-size: 1.1rem; margin-bottom: 5px;">🎉 ${solTitle}</p>
+      ${pTransTask ? pTransTask.solution : task.solution}
     `;
     solutionBox.classList.add('info-box--active');
     
@@ -631,12 +733,13 @@ function openPuzzleModal(gateId, isAlreadySolved = false) {
   } else {
     currentTaskIndex = 0;
     const task = p.tasks[currentTaskIndex];
-    questionText.textContent = task.question;
-    taskProgressLabel.textContent = `Görev 1 / ${p.tasks.length}`;
-    task.renderVisualizer(visWorkarea);
+    const pTransTask = pTrans ? pTrans.tasks[currentTaskIndex] : null;
+    questionText.textContent = pTransTask ? pTransTask.question : task.question;
+    taskProgressLabel.textContent = `${uiTranslations[currentLang]["modal-task-lbl"]} 1 / ${p.tasks.length}`;
+    task.renderVisualizer(visWorkarea, currentLang);
     
-    hintBox.textContent = task.hint;
-    solutionBox.textContent = task.solution;
+    hintBox.textContent = pTransTask ? pTransTask.hint : task.hint;
+    solutionBox.textContent = pTransTask ? pTransTask.solution : task.solution;
   }
 
   // Animate Open Modal
@@ -700,6 +803,8 @@ function handleSubmitAnswer() {
   if (!currentOpenPuzzle) return;
   const { puzzle } = currentOpenPuzzle;
   const currentMode = btnSubmitAnswer.getAttribute('data-mode');
+  const pTrans = puzzleTranslations[currentLang] ? puzzleTranslations[currentLang][puzzle.id] : null;
+  const pTransTask = pTrans ? pTrans.tasks[currentTaskIndex] : null;
 
   // A. Continue on Map / Go to Success screen
   if (currentMode === 'continue') {
@@ -732,20 +837,21 @@ function handleSubmitAnswer() {
     gsap.set('.dialogue-box', { borderColor: 'var(--color-gold)', backgroundColor: 'rgba(0,0,0,0.2)' });
 
     const task = puzzle.tasks[currentTaskIndex];
+    const nextTransTask = pTrans ? pTrans.tasks[currentTaskIndex] : null;
     
     // Reset dialogue box info
     speechAvatar.textContent = puzzle.avatar;
-    speechName.textContent = puzzle.character;
-    speechText.textContent = puzzle.narrative;
+    speechName.textContent = pTrans ? pTrans.character : puzzle.character;
+    speechText.textContent = pTrans ? pTrans.narrative : puzzle.narrative;
 
-    questionText.textContent = task.question;
-    taskProgressLabel.textContent = `Görev ${currentTaskIndex + 1} / ${puzzle.tasks.length}`;
+    questionText.textContent = nextTransTask ? nextTransTask.question : task.question;
+    taskProgressLabel.textContent = `${uiTranslations[currentLang]["modal-task-lbl"]} ${currentTaskIndex + 1} / ${puzzle.tasks.length}`;
     
     visWorkarea.innerHTML = '';
-    task.renderVisualizer(visWorkarea);
+    task.renderVisualizer(visWorkarea, currentLang);
 
-    hintBox.textContent = task.hint;
-    solutionBox.textContent = task.solution;
+    hintBox.textContent = nextTransTask ? nextTransTask.hint : task.hint;
+    solutionBox.textContent = nextTransTask ? nextTransTask.solution : task.solution;
     hintBox.classList.remove('info-box--active');
     solutionBox.classList.remove('info-box--active');
     
@@ -753,7 +859,7 @@ function handleSubmitAnswer() {
     pInput.disabled = false;
     pInput.style.display = 'inline-block';
     
-    btnSubmitAnswer.textContent = "Kapıyı Aç 🗝️";
+    btnSubmitAnswer.textContent = uiTranslations[currentLang]["btn-submit"] || "Kapıyı Aç 🗝️";
     btnShowHint.style.display = 'inline-flex';
     
     playSoundEffect(playClick);
@@ -798,8 +904,8 @@ function handleSubmitAnswer() {
     // Dynamic dialogue text update!
     if (task.speechCorrect) {
       speechAvatar.textContent = task.speechCorrect.avatar;
-      speechName.textContent = task.speechCorrect.name;
-      speechText.textContent = task.speechCorrect.text;
+      speechName.textContent = pTrans ? pTrans.character : task.speechCorrect.name;
+      speechText.textContent = pTransTask ? pTransTask.speechCorrect : task.speechCorrect.text;
     }
 
     // Blast particles at solve button
@@ -810,15 +916,16 @@ function handleSubmitAnswer() {
     
     if (currentTaskIndex < puzzle.tasks.length - 1) {
       // Task 1 solved - Go to Task 2 next
+      const solTitle = uiTranslations[currentLang]["correct-task-next"] || "🎉 Doğru Cevap! Görev Çözüldü!";
       solutionBox.innerHTML = `
-        <p style="font-weight: bold; font-size: 1.1rem; margin-bottom: 5px;">🎉 Doğru Cevap! Görev Çözüldü!</p>
-        ${task.solution}
+        <p style="font-weight: bold; font-size: 1.1rem; margin-bottom: 5px;">🎉 ${solTitle}</p>
+        ${pTransTask ? pTransTask.solution : task.solution}
       `;
       solutionBox.classList.add('info-box--active');
       hintBox.classList.remove('info-box--active');
       
       btnShowHint.style.display = 'none';
-      btnSubmitAnswer.textContent = "Sonraki Göreve Geç ➔";
+      btnSubmitAnswer.textContent = uiTranslations[currentLang]["btn-next-task"] || "Sonraki Göreve Geç ➔";
       btnSubmitAnswer.setAttribute('data-mode', 'next-task');
     } else {
       // Gate cleared!
@@ -828,9 +935,10 @@ function handleSubmitAnswer() {
       activeGate = puzzle.id + 1;
       updateMapVisuals(true); // Animate the avatar moving to the next gate!
 
+      const solTitle = uiTranslations[currentLang]["correct-gate-all"] || "🎉 Harika! Tüm Görevler Tamamlandı, Kapı Açıldı!";
       solutionBox.innerHTML = `
-        <p style="font-weight: bold; font-size: 1.1rem; margin-bottom: 5px;">🎉 Harika! Tüm Görevler Tamamlandı, Kapı Açıldı!</p>
-        ${task.solution}
+        <p style="font-weight: bold; font-size: 1.1rem; margin-bottom: 5px;">🎉 ${solTitle}</p>
+        ${pTransTask ? pTransTask.solution : task.solution}
       `;
       solutionBox.classList.add('info-box--active');
       hintBox.classList.remove('info-box--active');
@@ -839,9 +947,9 @@ function handleSubmitAnswer() {
       btnSubmitAnswer.setAttribute('data-mode', 'continue');
       
       if (puzzle.id === 8) {
-        btnSubmitAnswer.textContent = "Kraliçe'nin Yanına Git 👑";
+        btnSubmitAnswer.textContent = uiTranslations[currentLang]["btn-go-queen"] || "Kraliçe'nin Yanına Git 👑";
       } else {
-        btnSubmitAnswer.textContent = "Haritada Devam Et ➔";
+        btnSubmitAnswer.textContent = uiTranslations[currentLang]["btn-continue-map"] || "Haritada Devam Et ➔";
       }
     }
   } else {
@@ -857,8 +965,8 @@ function handleSubmitAnswer() {
 
     // Recher taunts student on failure
     speechAvatar.textContent = "👑";
-    speechName.textContent = "Kral Recher";
-    speechText.textContent = "Hahaha! Yanlış hesap! Zihniniz zindanlarımı aşmaya yetmiyor mu? Kaleminiz biraz daha kısaldı!";
+    speechName.textContent = currentLang === 'en' ? "King Recher" : currentLang === 'ru' ? "Король Решер" : "Kral Recher";
+    speechText.textContent = uiTranslations[currentLang]["recher-taunt"] || "Hahaha! Yanlış hesap! Zihniniz zindanlarımı aşmaya yetmiyor mu? Kaleminiz biraz daha kısaldı!";
   }
 }
 
@@ -890,5 +998,151 @@ function handleDownloadCertificate() {
     return;
   }
 
-  generateCertificate(name, pencilEnergy);
+  generateCertificate(name, pencilEnergy, currentLang);
+}
+
+// 9. Language Switcher Logic
+function changeLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem('game_lang', lang);
+  document.documentElement.lang = lang;
+  
+  const langSelect = document.getElementById('langSelect');
+  if (langSelect) langSelect.value = lang;
+
+  // Update teaser video source based on language
+  const teaserVideo = document.getElementById('teaserVideo');
+  if (teaserVideo) {
+    const isPlaying = !teaserVideo.paused;
+    const currentSrc = teaserVideo.querySelector('source');
+    let newSrc = "/intro.mp4";
+    if (lang === 'en') {
+      newSrc = "/intro_eng.mp4";
+    } else if (lang === 'ru') {
+      newSrc = "/intro_rusca.mp4";
+    }
+    
+    if (currentSrc && currentSrc.getAttribute('src') !== newSrc) {
+      currentSrc.setAttribute('src', newSrc);
+      teaserVideo.load();
+      if (isPlaying) {
+        teaserVideo.play().catch(e => console.log("Video replay blocked:", e));
+      }
+    }
+  }
+
+  // Translate static data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (uiTranslations[lang] && uiTranslations[lang][key]) {
+      const translation = uiTranslations[lang][key];
+      if (translation.includes('<strong') || translation.includes('<em') || translation.includes('<span') || translation.includes('<br>')) {
+        el.innerHTML = translation;
+      } else {
+        el.textContent = translation;
+      }
+    }
+  });
+
+  // Translate placeholders and titles
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (uiTranslations[lang] && uiTranslations[lang][key]) {
+      el.placeholder = uiTranslations[lang][key];
+    }
+  });
+
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    const key = el.getAttribute('data-i18n-title');
+    if (uiTranslations[lang] && uiTranslations[lang][key]) {
+      el.title = uiTranslations[lang][key];
+    }
+  });
+
+  // Translate SVG map text labels
+  for (let i = 1; i <= 8; i++) {
+    const node = document.getElementById(`node-${i}`);
+    if (node) {
+      const textEl = node.querySelector('.tower-text');
+      if (textEl && uiTranslations[lang] && uiTranslations[lang][`node-${i}-text`]) {
+        textEl.textContent = uiTranslations[lang][`node-${i}-text`];
+      }
+    }
+  }
+
+  // Update open modal if exists
+  if (currentOpenPuzzle) {
+    const { puzzle, solved } = currentOpenPuzzle;
+    const pTrans = puzzleTranslations[lang] ? puzzleTranslations[lang][puzzle.id] : null;
+    if (pTrans) {
+      chapterLabel.textContent = `${uiTranslations[lang]["chapter-lbl"]} ${puzzle.id}: ${pTrans.chapter}`;
+      puzzleTitle.textContent = pTrans.title;
+      speechName.textContent = pTrans.character;
+
+      if (solved) {
+        taskProgressLabel.textContent = uiTranslations[lang]["modal-completed"] || "Tamamlandı ✅";
+        speechText.textContent = pTrans.narrative;
+        const lastTask = pTrans.tasks[puzzle.tasks.length - 1];
+        const solTitle = lang === 'en' ? 'This gate was opened before!' : lang === 'ru' ? 'Эти ворота были открыты ранее!' : 'Bu Kapı Daha Önce Açıldı!';
+        solutionBox.innerHTML = `
+          <p style="font-weight: bold; font-size: 1.1rem; margin-bottom: 5px;">🎉 ${solTitle}</p>
+          ${lastTask.solution}
+        `;
+      } else {
+        taskProgressLabel.textContent = `${uiTranslations[lang]["modal-task-lbl"]} ${currentTaskIndex + 1} / ${puzzle.tasks.length}`;
+        const activeTask = pTrans.tasks[currentTaskIndex];
+
+        const isNextTask = btnSubmitAnswer.getAttribute('data-mode') === 'next-task';
+        const isContinue = btnSubmitAnswer.getAttribute('data-mode') === 'continue';
+
+        if (isNextTask) {
+          speechText.textContent = activeTask.speechCorrect;
+          const solTitle = uiTranslations[lang]["correct-task-next"] || "🎉 Doğru Cevap! Görev Çözüldü!";
+          solutionBox.innerHTML = `
+            <p style="font-weight: bold; font-size: 1.1rem; margin-bottom: 5px;">🎉 ${solTitle}</p>
+            ${activeTask.solution}
+          `;
+          btnSubmitAnswer.textContent = uiTranslations[lang]["btn-next-task"];
+        } else if (isContinue) {
+          speechText.textContent = activeTask.speechCorrect;
+          const solTitle = uiTranslations[lang]["correct-gate-all"] || "🎉 Harika! Tüm Görevler Tamamlandı, Kapı Açıldı!";
+          solutionBox.innerHTML = `
+            <p style="font-weight: bold; font-size: 1.1rem; margin-bottom: 5px;">🎉 ${solTitle}</p>
+            ${activeTask.solution}
+          `;
+          btnSubmitAnswer.textContent = puzzle.id === 8 ? uiTranslations[lang]["btn-go-queen"] : uiTranslations[lang]["btn-continue-map"];
+        } else {
+          speechText.textContent = pTrans.narrative;
+          questionText.textContent = activeTask.question;
+          hintBox.textContent = activeTask.hint;
+          solutionBox.textContent = activeTask.solution;
+          
+          if (btnSubmitAnswer.textContent.includes('Kapıyı Aç') || btnSubmitAnswer.textContent.includes('Open Gate') || btnSubmitAnswer.textContent.includes('Открыть')) {
+            btnSubmitAnswer.textContent = uiTranslations[lang]["btn-submit"] || "Kapıyı Aç 🗝️";
+          }
+        }
+      }
+
+      // Re-populate worksheet tab if worksheet exists
+      if (puzzle.worksheet && pTrans.worksheet) {
+        if (wsTopic) wsTopic.textContent = pTrans.worksheet.topic;
+        if (wsOutcome) wsOutcome.textContent = pTrans.worksheet.outcome;
+        if (wsQ1Text) wsQ1Text.textContent = pTrans.worksheet.q1;
+        if (wsQ2Text) wsQ2Text.textContent = pTrans.worksheet.q2;
+
+        if (wsPrintTitle) wsPrintTitle.textContent = `${uiTranslations[lang]["chapter-lbl"]} ${puzzle.id}: ${pTrans.worksheet.title.toUpperCase()}`;
+        if (wsPrintTopic) wsPrintTopic.textContent = pTrans.worksheet.topic;
+        if (wsPrintOutcome) wsPrintOutcome.textContent = pTrans.worksheet.outcome;
+        if (wsPrintNarrative) wsPrintNarrative.textContent = pTrans.narrative;
+        if (wsPrintQ1Text) wsPrintQ1Text.textContent = pTrans.worksheet.q1;
+        if (wsPrintQ2Text) wsPrintQ2Text.textContent = pTrans.worksheet.q2;
+      }
+      
+      // Re-render visualizer
+      const task = puzzle.tasks[currentTaskIndex];
+      if (task && typeof task.renderVisualizer === 'function') {
+        task.renderVisualizer(visWorkarea, lang);
+      }
+    }
+  }
 }

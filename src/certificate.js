@@ -1,11 +1,68 @@
 // Emerald Kingdom Rescue Certificate Generator (HTML Canvas)
 
-export function generateCertificate(playerName, score) {
+export function generateCertificate(playerName, score, lang = 'tr') {
   // Create a high-res canvas (double scale for crisp rendering/printing)
   const canvas = document.createElement('canvas');
   canvas.width = 1600;
   canvas.height = 1200;
   const ctx = canvas.getContext('2d');
+
+  // Translation configuration
+  const t = {
+    tr: {
+      kingdom: "ZÜMRÜT KRALLIĞI",
+      title: "KAHRAMANLIK VE MATEMATİK BAŞARI SERTİFİKASI",
+      line1: "Bu onurlu belge, Lugubriya Krallığı'nın karanlık zindanlarını aşarak",
+      line2: "Kral Recher'in kurduğu zorlu matematik bilmecelerini çözen,",
+      line3: "ve üstün problem çözme yeteneğiyle Zümrüt Kraliçe Jayden'ı kurtaran,",
+      line4: "krallığın en cesur matematik kaşifine takdim edilmiştir.",
+      energy: `Kalan Sihirli Kalem Enerjisi: %${score}`,
+      date: "Tarih",
+      locale: "tr-TR",
+      approved: "Sertifikayı Onaylayan:",
+      queenTitle: "İdilya Kraliçesi",
+      teamTitle: "Kurtarma Ekibi Arkadaşları:",
+      team: "Aleks, Sam & Vanessa",
+      queenName: "Kraliçe Jayden",
+      filename: `kraliceyi-kurtarmak-sertifika-${playerName.replace(/\s+/g, '-').toLowerCase()}.png`
+    },
+    en: {
+      kingdom: "EMERALD KINGDOM",
+      title: "CERTIFICATE OF HEROISM & MATH ACHIEVEMENT",
+      line1: "This honorable certificate is presented to the bravest math explorer",
+      line2: "who ventured through the dark dungeons of the Kingdom of Lugubria,",
+      line3: "solved the challenging mathematical puzzles of King Recher,",
+      line4: "and rescued Queen Jayden with outstanding problem-solving skills.",
+      energy: `Remaining Magic Pencil Energy: ${score}%`,
+      date: "Date",
+      locale: "en-US",
+      approved: "Approved by:",
+      queenTitle: "Queen of Idilya",
+      teamTitle: "Rescue Team Companions:",
+      team: "Alex, Sam & Vanessa",
+      queenName: "Queen Jayden",
+      filename: `rescue-queen-jayden-certificate-${playerName.replace(/\s+/g, '-').toLowerCase()}.png`
+    },
+    ru: {
+      kingdom: "ИЗУМРУДНОЕ КОРОЛЕВСТВО",
+      title: "СЕРТИФИКАТ ГЕРОИЗМА И МАТЕМАТИЧЕСКИХ ДОСТИЖЕНИЙ",
+      line1: "Настоящий почетный сертификат вручается отважному исследователю,",
+      line2: "который преодолел темные подземелья Королевства Лугубрия,",
+      line3: "решил сложные математические загадки Короля Решера,",
+      line4: "и освободил Королеву Джейден с помощью выдающегося ума.",
+      energy: `Оставшаяся энергия волшебного карандаша: ${score}%`,
+      date: "Дата",
+      locale: "ru-RU",
+      approved: "Утверждено:",
+      queenTitle: "Королева Идилии",
+      teamTitle: "Товарищи по команде:",
+      team: "Алекс, Сэм и Ванесса",
+      queenName: "Королева Джейден",
+      filename: `rescue-queen-certificate-${playerName.replace(/\s+/g, '-').toLowerCase()}.png`
+    }
+  };
+
+  const activeLang = t[lang] || t.tr;
 
   // Colors
   const darkNavy = '#090d16';
@@ -50,17 +107,17 @@ export function generateCertificate(playerName, score) {
 
   ctx.fillStyle = gold;
   ctx.font = 'bold 50px "Cinzel", "Playfair Display", "Georgia", serif';
-  ctx.fillText("ZÜMRÜT KRALLIĞI", canvas.width / 2, 190);
+  ctx.fillText(activeLang.kingdom, canvas.width / 2, 190);
   
   ctx.fillStyle = cream;
   ctx.font = 'letter-spacing: 0.1em; 28px "Montserrat", "Arial", sans-serif';
-  ctx.fillText("KAHRAMANLIK VE MATEMATİK BAŞARI SERTİFİKASI", canvas.width / 2, 240);
+  ctx.fillText(activeLang.title, canvas.width / 2, 240);
 
   // 6. Certificate Text
   ctx.fillStyle = 'rgba(254, 243, 199, 0.9)';
   ctx.font = 'italic 28px "Georgia", serif';
-  ctx.fillText("Bu onurlu belge, Lugubriya Krallığı'nın karanlık zindanlarını aşarak", canvas.width / 2, 400);
-  ctx.fillText("Kral Recher'in kurduğu zorlu matematik bilmecelerini çözen,", canvas.width / 2, 450);
+  ctx.fillText(activeLang.line1, canvas.width / 2, 400);
+  ctx.fillText(activeLang.line2, canvas.width / 2, 450);
   
   // 7. Player Name (Large & Elegant)
   ctx.fillStyle = gold;
@@ -78,46 +135,46 @@ export function generateCertificate(playerName, score) {
   // 8. Description continued
   ctx.fillStyle = 'rgba(254, 243, 199, 0.9)';
   ctx.font = 'italic 28px "Georgia", serif';
-  ctx.fillText("ve üstün problem çözme yeteneğiyle Zümrüt Kraliçe Jayden'ı kurtaran,", canvas.width / 2, 690);
-  ctx.fillText("krallığın en cesur matematik kaşifine takdim edilmiştir.", canvas.width / 2, 740);
+  ctx.fillText(activeLang.line3, canvas.width / 2, 690);
+  ctx.fillText(activeLang.line4, canvas.width / 2, 740);
 
   // 9. Pencil Energy Score
   ctx.fillStyle = emerald;
   ctx.font = 'bold 32px "Montserrat", sans-serif';
-  ctx.fillText(`Kalan Sihirli Kalem Enerjisi: %${score}`, canvas.width / 2, 830);
+  ctx.fillText(activeLang.energy, canvas.width / 2, 830);
 
   // 10. Date and Signatures
   // Left: Date
   ctx.textAlign = 'left';
   ctx.fillStyle = 'rgba(254, 243, 199, 0.7)';
   ctx.font = '24px "Montserrat", sans-serif';
-  const today = new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
-  ctx.fillText(`Tarih: ${today}`, 200, 960);
+  const today = new Date().toLocaleDateString(activeLang.locale, { day: 'numeric', month: 'long', year: 'numeric' });
+  ctx.fillText(`${activeLang.date}: ${today}`, 200, 960);
   
   // Right: Signature of Queen
   ctx.textAlign = 'right';
-  ctx.fillText("Sertifikayı Onaylayan:", canvas.width - 200, 930);
+  ctx.fillText(activeLang.approved, canvas.width - 200, 930);
   
   ctx.fillStyle = gold;
   ctx.font = 'bold 36px "Brush Script MT", "Caveat", "Playfair Display", italic, serif';
-  ctx.fillText("Kraliçe Jayden", canvas.width - 200, 980);
+  ctx.fillText(activeLang.queenName, canvas.width - 200, 980);
   
   ctx.fillStyle = 'rgba(254, 243, 199, 0.5)';
   ctx.font = '18px "Montserrat", sans-serif';
-  ctx.fillText("İdilya Kraliçesi", canvas.width - 200, 1010);
+  ctx.fillText(activeLang.queenTitle, canvas.width - 200, 1010);
 
   // Center Signature of the team
   ctx.textAlign = 'center';
   ctx.fillStyle = 'rgba(254, 243, 199, 0.7)';
   ctx.font = '24px "Montserrat", sans-serif';
-  ctx.fillText("Kurtarma Ekibi Arkadaşları:", canvas.width / 2, 930);
+  ctx.fillText(activeLang.teamTitle, canvas.width / 2, 930);
   ctx.fillStyle = cream;
   ctx.font = '26px "Georgia", serif';
-  ctx.fillText("Aleks, Sam & Vanessa", canvas.width / 2, 975);
+  ctx.fillText(activeLang.team, canvas.width / 2, 975);
 
   // 11. Trigger Download
   const link = document.createElement('a');
-  link.download = `kraliceyi-kurtarmak-sertifika-${playerName.replace(/\s+/g, '-').toLowerCase()}.png`;
+  link.download = activeLang.filename;
   link.href = canvas.toDataURL('image/png');
   link.click();
 }

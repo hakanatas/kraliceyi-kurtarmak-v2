@@ -25,13 +25,19 @@
   <div class="app-container">
     <!-- Top Bar Navigation & Health -->
     <header class="container">
-      <div class="logo">👑 KRALİÇEYİ KURTARMAK</div>
+      <div class="logo" data-i18n="logo">👑 KRALİÇEYİ KURTARMAK</div>
       
       <div class="controls-group">
+        <select class="lang-select" id="langSelect" aria-label="Select Language">
+          <option value="tr">TR</option>
+          <option value="en">EN</option>
+          <option value="ru">RU</option>
+        </select>
+
         <!-- Magic Pencil Energy Tracker -->
         <div class="pencil-tracker" id="pencilTracker" title="Sihirli Kalem Enerjisi">
           <span style="font-size: 1.2rem; display: inline-flex; align-items: center; gap: 4px;">
-            ✏️ <span class="pencil-lbl">Sihirli Kalem Gücü:</span>
+            ✏️ <span class="pencil-lbl" data-i18n="pencil-lbl">Sihirli Kalem Gücü:</span>
           </span>
           <div class="pencil-bar-outer">
             <div class="pencil-bar-inner" id="pencilBar"></div>
@@ -71,16 +77,16 @@
             <div class="mascot-welcome glass-panel">
               <img src="/monoculus.png" alt="Sevimli Canavar Monoculus" class="welcome-mascot-img" />
               <div class="mascot-bubble">
-                <span class="mascot-name">Monoculus Diyor ki:</span>
-                <p>"Selam Genç Matematik Kaşifi! Ben Monoculus. Kraliçe Jayden'ı kurtarmak için sihirli matematik maceramıza katılmaya hazır mısın? Sana yol boyunca rehberlik edeceğim!"</p>
+                <span class="mascot-name" data-i18n="mascot-name">Monoculus Diyor ki:</span>
+                <p data-i18n="mascot-speech">"Selam Genç Matematik Kaşifi! Ben Monoculus. Kraliçe Jayden'ı kurtarmak için sihirli matematik maceramıza katılmaya hazır mısın? Sana yol boyunca rehberlik edeceğim!"</p>
               </div>
             </div>
 
-            <h1 class="hero-title">Matematiğin Sihirli Dünyasına Hoş Geldin!</h1>
-            <p class="hero-subtitle">
+            <h1 class="hero-title" data-i18n="hero-title">Matematiğin Sihirli Dünyasına Hoş Geldin!</h1>
+            <p class="hero-subtitle" data-i18n="hero-subtitle">
               Aleks, Sam ve Vanessa'nın gizemli dünyasına ortak ol. Kral Recher'in zindanlarında hapsedilen Kraliçe Jayden'ı kurtarmak için matematik bilmecelerini çöz, kapıları tek tek aç!
             </p>
-            <button class="btn btn--primary btn--glow" id="btnStartAdventure">Maceraya Başla ⚔️</button>
+            <button class="btn btn--primary btn--glow" id="btnStartAdventure" data-i18n="btn-start">Maceraya Başla ⚔️</button>
           </div>
 
           <div class="hero-right">
@@ -99,7 +105,7 @@
                   <button class="video-control-btn" id="btnMuteVideo" aria-label="Sesi Aç / Kapat" title="Sesi Aç / Kapat">
                     <span class="video-icon">🔊</span>
                   </button>
-                  <button class="video-control-btn" id="btnBackToIllustration" aria-label="Geri Dön" title="Görsele Dön">
+                  <button class="video-control-btn" id="btnBackToIllustration" aria-label="Geri Dön" title="Görsele Dön" data-i18n-title="btn-back-ill">
                     <span class="video-icon">🖼️</span>
                   </button>
                 </div>
@@ -108,11 +114,11 @@
               <!-- Hidden Illustration Wrapper, shown when back button is clicked or video ends -->
               <div class="illustration-wrapper" id="heroIllustrationWrapper" style="display: none;">
                 <img src="/landing_illustration.png" alt="Lugubriya Krallığı Şatosu" class="hero-illustration" />
-                <button class="btn btn--secondary btn--small play-teaser-btn" id="btnToggleTeaser">
+                <button class="btn btn--secondary btn--small play-teaser-btn" id="btnToggleTeaser" data-i18n="btn-teaser-again">
                   🎬 Tanıtım Videosunu Tekrar İzle
                 </button>
               </div>
-              <div class="video-caption" id="showcaseCaption">
+              <div class="video-caption" id="showcaseCaption" data-i18n="caption-showcase">
                 🏰 Lugubriya Krallığı ve Zümrüt Kraliçe'nin Dünyası
               </div>
             </div>
@@ -126,14 +132,14 @@
               <img src="/vladimir-tumanov.png" alt="Vladimir Tumanov - Kraliçeyi Kurtarmak" class="author-img" />
             </div>
             <div class="about-right">
-              <h2 class="about-title font-accent">Kitap ve Yazar Hakkında</h2>
-              <p class="about-text">
+              <h2 class="about-title font-accent" data-i18n="about-title">Kitap ve Yazar Hakkında</h2>
+              <p class="about-text" data-i18n="about-p1">
                 <strong>Vladimir Tumanov</strong>'un dünya çapında çok sevilen <em>"Kraliçeyi Kurtarmak"</em> romanından uyarlanan bu interaktif oyunda, matematiğin büyülü dünyasını keşfedeceksin!
               </p>
-              <p class="about-text">
+              <p class="about-text" data-i18n="about-p2">
                 Aleks, yolda bulduğu sihirli harita ve kalemle kendini Lugubriya Krallığı'nda bulur. Kral Recher'in zindanlarında esir tutulan Kraliçe Jayden'ı kurtarmanın tek yolu, her kapıdaki zorlu matematik bilmecelerini çözmektir. Zekanı kullan, kapıları aç ve bu heyecan verici maceranın kahramanı ol!
               </p>
-              <div class="author-badge">
+              <div class="author-badge" data-i18n="author-badge">
                 ✍️ Yazar: Vladimir Tumanov | 🏫 5. Sınıf Matematik Seviyesi
               </div>
             </div>
@@ -145,8 +151,8 @@
       <section class="screen" id="mapScreen">
         <div class="map-screen">
           <div class="map-title-box">
-            <h2 class="font-accent" style="font-size: 2rem; color: var(--color-gold);">LUGUBRİYA KRALLIĞI</h2>
-            <p style="color: var(--color-text-muted);">Zindan kapılarını açmak ve Kraliçeyi kurtarmak için parıldayan kuleleri seç!</p>
+            <h2 class="font-accent" style="font-size: 2rem; color: var(--color-gold);" data-i18n="map-title">LUGUBRİYA KRALLIĞI</h2>
+            <p style="color: var(--color-text-muted);" data-i18n="map-subtitle">Zindan kapılarını açmak ve Kraliçeyi kurtarmak için parıldayan kuleleri seç!</p>
           </div>
 
           <!-- Interactive SVG Map -->
@@ -275,15 +281,15 @@
             <div class="map-legend">
               <div class="legend-item">
                 <span class="legend-dot legend-dot--locked"></span>
-                <span>Kilitli Zindan</span>
+                <span data-i18n="legend-locked">Kilitli Zindan</span>
               </div>
               <div class="legend-item">
                 <span class="legend-dot legend-dot--active"></span>
-                <span>Aktif Görev</span>
+                <span data-i18n="legend-active">Aktif Görev</span>
               </div>
               <div class="legend-item">
                 <span class="legend-dot legend-dot--unlocked"></span>
-                <span>Açılmış Kapı</span>
+                <span data-i18n="legend-unlocked">Açılmış Kapı</span>
               </div>
             </div>
           </div>
@@ -295,19 +301,19 @@
         <div class="success-screen">
           <div class="success-card glass-panel">
             <div class="success-badge">👸🧝‍♀️💎</div>
-            <h2 class="success-title">Kraliçe Jayden Kurtarıldı!</h2>
-            <p class="success-text">
+            <h2 class="success-title" data-i18n="success-title">Kraliçe Jayden Kurtarıldı!</h2>
+            <p class="success-text" data-i18n="success-text">
               Harika bir iş çıkardın! Karşına çıkan tüm matematik bilmecelerini zekanla çözdün ve Zümrüt Kraliçe'yi özgürlüğüne kavuşturdun. İdilya Krallığı halkı sana minnettar!
             </p>
             
             <!-- Certificate Info Form -->
             <div class="certificate-form">
-              <p style="font-size: 0.95rem; color: var(--color-gold-light);">Sertifikana yazılacak ismini gir ve ödülünü indir:</p>
-              <input type="text" id="playerNameInput" class="cert-input" placeholder="İsmini Yaz..." maxlength="30" />
-              <button class="btn btn--primary btn--glow" id="btnDownloadCert">🏆 Kahramanlık Belgesini İndir</button>
+              <p style="font-size: 0.95rem; color: var(--color-gold-light);" data-i18n="cert-instruct">Sertifikana yazılacak ismini gir ve ödülünü indir:</p>
+              <input type="text" id="playerNameInput" class="cert-input" placeholder="İsmini Yaz..." data-i18n-placeholder="cert-placeholder" maxlength="30" />
+              <button class="btn btn--primary btn--glow" id="btnDownloadCert" data-i18n="btn-download-cert">🏆 Kahramanlık Belgesini İndir</button>
             </div>
 
-            <button class="btn btn--secondary" id="btnPlayAgain" style="margin-top: var(--space-lg);">Macerayı Baştan Oyna 🔄</button>
+            <button class="btn btn--secondary" id="btnPlayAgain" style="margin-top: var(--space-lg);" data-i18n="btn-play-again">Macerayı Baştan Oyna 🔄</button>
           </div>
         </div>
       </section>
@@ -342,8 +348,8 @@
 
         <!-- Modal Tabs Navigation -->
         <div class="modal-tabs">
-          <button class="tab-btn tab-btn--active" id="tabBtnInteractive">İnteraktif Görevler 🎮</button>
-          <button class="tab-btn" id="tabBtnWorksheet">Çalışma Kağıdı 📝</button>
+          <button class="tab-btn tab-btn--active" id="tabBtnInteractive" data-i18n="tab-interactive">İnteraktif Görevler 🎮</button>
+          <button class="tab-btn" id="tabBtnWorksheet" data-i18n="tab-worksheet">Çalışma Kağıdı 📝</button>
         </div>
         
         <!-- Tab 1: Interactive Challenge View -->
@@ -359,7 +365,7 @@
 
           <!-- Question Prompt -->
           <div class="question-card">
-            <div class="question-title">ZİNDAN BİLMECESİ:</div>
+            <div class="question-title" data-i18n="modal-task-lbl">ZİNDAN BİLMECESİ:</div>
             <p class="question-text" id="questionText">Sorunun açıklaması buraya gelecek...</p>
           </div>
 
@@ -371,13 +377,13 @@
           <!-- Answer inputs and control button -->
           <div class="submission-bar">
             <div class="input-container">
-              <label for="pInput" style="font-size: 0.9rem; font-weight: bold; color: var(--color-text-muted);">Cevabın:</label>
-              <input type="text" id="pInput" class="answer-input" placeholder="Sayı..." />
+              <label for="pInput" style="font-size: 0.9rem; font-weight: bold; color: var(--color-text-muted);" data-i18n="label-answer">Cevabın:</label>
+              <input type="text" id="pInput" class="answer-input" placeholder="Sayı..." data-i18n-placeholder="input-placeholder" />
             </div>
             
             <div class="flex gap-md" style="margin-top: 0.5rem;">
-              <button class="btn btn--secondary" id="btnShowHint">💡 İpucu Al</button>
-              <button class="btn btn--primary" id="btnSubmitAnswer">Kapıyı Aç 🗝️</button>
+              <button class="btn btn--secondary" id="btnShowHint" data-i18n="btn-hint">💡 İpucu Al</button>
+              <button class="btn btn--primary" id="btnSubmitAnswer" data-i18n="btn-submit">Kapıyı Aç 🗝️</button>
             </div>
           </div>
 
@@ -392,29 +398,29 @@
             <div class="preview-header">
               <img src="/monoculus.png" alt="Mascot Monoculus" class="preview-mascot" />
               <div class="preview-bubble">
-                <span class="bubble-title">Monoculus Diyor ki:</span>
-                <p>"Matematiği kağıt üzerinde modellemek zihnini açar! Bu zindan kapısına ait ders çalışma kağıdını indirip yazdırabilirsin!"</p>
+                <span class="bubble-title" data-i18n="mascot-name">Monoculus Diyor ki:</span>
+                <p data-i18n="ws-preview-mascot-speech">"Matematiği kağıt üzerinde modellemek zihnini açar! Bu zindan kapısına ait ders çalışma kağıdını indirip yazdırabilirsin!"</p>
               </div>
             </div>
             
             <div class="preview-info-rows">
-              <div class="p-row"><strong>Konu Başlığı:</strong> <span id="wsTopic">Yükleniyor...</span></div>
-              <div class="p-row"><strong>Kazanım Hedefi:</strong> <span id="wsOutcome">Yükleniyor...</span></div>
+              <div class="p-row"><strong data-i18n="ws-preview-topic">Konu Başlığı:</strong> <span id="wsTopic">Yükleniyor...</span></div>
+              <div class="p-row"><strong data-i18n="ws-preview-outcome">Kazanım Hedefi:</strong> <span id="wsOutcome">Yükleniyor...</span></div>
             </div>
 
             <div class="preview-questions-list">
               <div class="preview-q-item">
-                <span class="pq-num">Soru 1:</span>
+                <span class="pq-num" data-i18n="ws-preview-q1">Soru 1:</span>
                 <span class="pq-text" id="wsQ1Text">Yükleniyor...</span>
               </div>
               <div class="preview-q-item">
-                <span class="pq-num">Soru 2:</span>
+                <span class="pq-num" data-i18n="ws-preview-q2">Soru 2:</span>
                 <span class="pq-text" id="wsQ2Text">Yükleniyor...</span>
               </div>
             </div>
 
             <div class="worksheet-actions">
-              <button class="btn btn--primary btn--glow" id="btnPrintWorksheet">🖨️ Çalışma Kağıdını Yazdır / PDF Kaydet</button>
+              <button class="btn btn--primary btn--glow" id="btnPrintWorksheet" data-i18n="btn-print-ws">🖨️ Çalışma Kağıdını Yazdır / PDF Kaydet</button>
             </div>
           </div>
         </div>
@@ -425,45 +431,45 @@
   <!-- Hidden Printable Worksheet Container (Visible only on print) -->
   <div class="printable-worksheet" id="printableWorksheet">
     <div class="ws-print-header">
-      <div class="ws-header-title">👑 KRALİÇEYİ KURTARMAK MATEMATİK ÇALIŞMA KAĞIDI</div>
+      <div class="ws-header-title" data-i18n="ws-print-title">👑 KRALİÇEYİ KURTARMAK MATEMATİK ÇALIŞMA KAĞIDI</div>
       <div class="ws-header-meta">
-        <div class="meta-field"><strong>Öğrencinin Adı Soyadı:</strong> ________________________</div>
-        <div class="meta-field"><strong>Sınıfı / No:</strong> ______________</div>
-        <div class="meta-field"><strong>Tarih:</strong> _________________</div>
+        <div class="meta-field" id="wsPrintMetaName" data-i18n="ws-meta-name"><strong>Öğrencinin Adı Soyadı:</strong> ________________________</div>
+        <div class="meta-field" id="wsPrintMetaClass" data-i18n="ws-meta-class"><strong>Sınıfı / No:</strong> ______________</div>
+        <div class="meta-field" id="wsPrintMetaDate" data-i18n="ws-meta-date"><strong>Tarih:</strong> _________________</div>
       </div>
     </div>
 
     <div class="ws-print-body">
       <div class="ws-section-box">
         <h3 id="wsPrintTitle">Bölüm X: ...</h3>
-        <p><strong>Konu Başlığı:</strong> <span id="wsPrintTopic">...</span></p>
-        <p><strong>Öğrenme Kazanımı:</strong> <span id="wsPrintOutcome">...</span></p>
+        <p><strong data-i18n="ws-print-topic-lbl">Konu Başlığı:</strong> <span id="wsPrintTopic">...</span></p>
+        <p><strong data-i18n="ws-print-outcome-lbl">Öğrenme Kazanımı:</strong> <span id="wsPrintOutcome">...</span></p>
       </div>
 
       <div class="ws-intro-story">
-        <strong>Lugubriya Krallığı Hikayesi:</strong>
+        <strong data-i18n="ws-print-story-lbl">Lugubriya Krallığı Hikayesi:</strong>
         <p id="wsPrintNarrative">...</p>
       </div>
 
       <div class="ws-questions-container">
         <!-- Question 1 -->
         <div class="ws-q-block">
-          <div class="ws-q-header">SORU 1:</div>
+          <div class="ws-q-header" data-i18n="ws-print-q1-lbl">SORU 1:</div>
           <div class="ws-q-text" id="wsPrintQ1Text">...</div>
           
           <div class="ws-working-space">
-            <div class="ws-space-title">✍️ Çözüm ve Çizim / Modelleme Alanı:</div>
+            <div class="ws-space-title" data-i18n="ws-print-space-lbl">✍️ Çözüm ve Çizim / Modelleme Alanı:</div>
             <div class="ws-empty-box" id="wsPrintQ1Space"></div>
           </div>
         </div>
 
         <!-- Question 2 -->
         <div class="ws-q-block">
-          <div class="ws-q-header">SORU 2:</div>
+          <div class="ws-q-header" data-i18n="ws-print-q2-lbl">SORU 2:</div>
           <div class="ws-q-text" id="wsPrintQ2Text">...</div>
           
           <div class="ws-working-space">
-            <div class="ws-space-title">✍️ Çözüm ve Çizim / Modelleme Alanı:</div>
+            <div class="ws-space-title" data-i18n="ws-print-space-lbl">✍️ Çözüm ve Çizim / Modelleme Alanı:</div>
             <div class="ws-empty-box" id="wsPrintQ2Space"></div>
           </div>
         </div>
@@ -471,7 +477,7 @@
     </div>
 
     <div class="ws-print-footer">
-      <div class="footer-note">Zihnini kullan, zindan kapılarını aç ve Kraliçe Jayden'ı kurtar! | 5. Sınıf Matematik Macerası</div>
+      <div class="footer-note" data-i18n="ws-print-footer-note">Zihnini kullan, zindan kapılarını aç ve Kraliçe Jayden'ı kurtar! | 5. Sınıf Matematik Macerası</div>
     </div>
   </div>
 

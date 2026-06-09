@@ -200,6 +200,40 @@ header {
   align-items: center;
 }
 
+.lang-select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  color: var(--color-text-main);
+  padding: 0 14px;
+  height: 44px;
+  border-radius: 22px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  outline: none;
+  transition: var(--transition-smooth);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.lang-select:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--color-emerald);
+  color: var(--color-emerald);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+}
+
+.lang-select option {
+  background: #111827; /* Dark background color matching --bg-dark / tailwind dark slate */
+  color: #f3f4f6;
+  font-weight: normal;
+}
+
 .icon-btn {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border-glass);
